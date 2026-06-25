@@ -277,76 +277,73 @@ export default function Blog() {
           )}
         </div>
 
-        {/* ============================================
-            PAGINATION
-            ============================================ */}
-        {totalPages > 1 && (
-          <div className="mt-10 flex flex-col items-center gap-3">
-            <p className="text-gray-500 text-xs">
-              Showing <span className="text-[#D4AF37] font-semibold">{startIndex + 1}</span> to{' '}
-              <span className="text-[#D4AF37] font-semibold">
-                {Math.min(endIndex, filteredPosts.length)}
-              </span>{' '}
-              of <span className="text-[#D4AF37] font-semibold">{filteredPosts.length}</span> Articles
-            </p>
+        {/* Pagination */}
+{totalPages > 1 && (
+  <div className="mt-10 flex flex-col items-center gap-3">
+    <p className="text-gray-500 text-xs">
+      Showing <span className="text-[#D4AF37] font-semibold">{startIndex + 1}</span> to{' '}
+      <span className="text-[#D4AF37] font-semibold">
+        {Math.min(endIndex, filteredPosts.length)}
+      </span>{' '}
+      of <span className="text-[#D4AF37] font-semibold">{filteredPosts.length}</span> Articles
+    </p>
 
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className={`p-2 rounded-lg border transition-all duration-300 ${
-                  currentPage === 1
-                    ? 'border-[#D4AF37]/10 text-[#D4AF37]/30 cursor-not-allowed'
-                    : 'border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]/50'
-                }`}
-              >
-                <FaChevronLeft className="text-xs" />
-              </button>
+    <div className="flex items-center gap-1.5">
+      <button
+        onClick={() => goToPage(currentPage - 1)}
+        disabled={currentPage === 1}
+        className={`p-2 rounded-lg border transition-all duration-300 ${
+          currentPage === 1
+            ? 'border-[#D4AF37]/10 text-[#D4AF37]/30 cursor-not-allowed'
+            : 'border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]/50'
+        }`}
+      >
+        <FaChevronLeft className="text-xs" />
+      </button>
 
-              <div className="flex items-center gap-0.5">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  let pageNum
-                  if (totalPages <= 5) {
-                    pageNum = i + 1
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i
-                  } else {
-                    pageNum = currentPage - 2 + i
-                  }
-                  
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => goToPage(pageNum)}
-                      className={`w-8 h-8 rounded-lg font-medium text-xs transition-all duration-300 ${
-                        pageNum === currentPage
-                          ? 'bg-[#D4AF37] text-green-950 shadow-lg shadow-[#D4AF37]/30'
-                          : 'text-gray-400 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  )
-                })}
-              </div>
+      <div className="flex items-center gap-0.5">
+        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+          let pageNum: number  // ← FIXED: Added type
+          if (totalPages <= 5) {
+            pageNum = i + 1
+          } else if (currentPage <= 3) {
+            pageNum = i + 1
+          } else if (currentPage >= totalPages - 2) {
+            pageNum = totalPages - 4 + i
+          } else {
+            pageNum = currentPage - 2 + i
+          }
+          
+          return (
+            <button
+              key={i}
+              onClick={() => goToPage(pageNum)}
+              className={`w-8 h-8 rounded-lg font-medium text-xs transition-all duration-300 ${
+                pageNum === currentPage
+                  ? 'bg-[#D4AF37] text-green-950 shadow-lg shadow-[#D4AF37]/30'
+                  : 'text-gray-400 hover:text-[#D4AF37] hover:bg-[#D4AF37]/10'
+              }`}
+            >
+              {pageNum}
+            </button>
+          )
+        })}
+      </div>
 
-              <button
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className={`p-2 rounded-lg border transition-all duration-300 ${
-                  currentPage === totalPages
-                    ? 'border-[#D4AF37]/10 text-[#D4AF37]/30 cursor-not-allowed'
-                    : 'border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]/50'
-                }`}
-              >
-                <FaChevronRight className="text-xs" />
-              </button>
-            </div>
-          </div>
-        )}
-
+      <button
+        onClick={() => goToPage(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className={`p-2 rounded-lg border transition-all duration-300 ${
+          currentPage === totalPages
+            ? 'border-[#D4AF37]/10 text-[#D4AF37]/30 cursor-not-allowed'
+            : 'border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37]/10 hover:border-[#D4AF37]/50'
+        }`}
+      >
+        <FaChevronRight className="text-xs" />
+      </button>
+    </div>
+  </div>
+)}
         {/* ============================================
             BOTTOM DECORATION
             ============================================ */}
