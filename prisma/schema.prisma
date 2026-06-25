@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String              @id @default(cuid())
+  name                String
+  email               String              @unique
+  password            String
+  role                Role                @default(USER)
+  isActive            Boolean             @default(true)
+  totalSubmissions    Int                 @default(0)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  
+  submissions         DuroodSubmission[]
+}
+
+model DuroodSubmission {
+  id                  String              @id @default(cuid())
+  userId              String?
+  userName            String
+  duroodCount         Int
+  duroodType          String?
+  isAnonymous         Boolean             @default(false)
+  ipAddress           String?
+  status              SubmissionStatus    @default(PENDING)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  
+  user                User?               @relation(fields: [userId], references: [id])
+}
+
+model AudioResource {
+  id                  String              @id @default(cuid())
+  title               String
+  description         String?
+  url                 String
+  duration            String?
+  category            String
+  downloads           Int                 @default(0)
+  plays               Int                 @default(0)
+  isFeatured          Boolean             @default(false)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+model BookResource {
+  id                  String              @id @default(cuid())
+  title               String
+  author              String
+  description         String?
+  pdfUrl              String
+  coverUrl            String?
+  category            String
+  downloads           Int                 @default(0)
+  isFeatured          Boolean             @default(false)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+model VideoResource {
+  id                  String              @id @default(cuid())
+  title               String
+  description         String?
+  url                 String
+  thumbnailUrl        String?
+  duration            String?
+  category            String
+  views               Int                 @default(0)
+  isFeatured          Boolean             @default(false)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+model BlogPost {
+  id                  String              @id @default(cuid())
+  title               String
+  slug                String              @unique
+  excerpt             String?
+  content             String              @db.Text
+  featuredImage       String?
+  author              String
+  category            String
+  tags                String              @default("")  // ← Changed from String[] to String
+  views               Int                 @default(0)
+  isPublished         Boolean             @default(false)
+  publishedAt         DateTime?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+model FAQ {
+  id                  String              @id @default(cuid())
+  question            String
+  answer              String              @db.Text
+  category            String
+  order               Int                 @default(0)
+  isActive            Boolean             @default(true)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

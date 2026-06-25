@@ -1,0 +1,279 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cinzel:wght@600;700;800;900&display=swap');
+
+
+/* ============================================
+   DUROOD BANNER
+   ============================================ */
+
+.durood-banner {
+  position: absolute;
+  top: 55px;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  z-index: 40;
+  background: transparent;
+}
+
+.durood-scroll {
+  display: flex;
+  width: max-content;
+
+  animation: marquee 60s linear infinite;
+}
+
+.durood-item {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+
+  font-family: 'Amiri', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #D4AF37;
+
+  padding-right: 80px;
+}
+
+.star {
+  margin: 0 20px;
+  color: #D4AF37;
+}
+
+.divider {
+  margin: 0 25px;
+  opacity: .4;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+  .durood-banner {
+    top: 13px;
+  }
+
+  .durood-item {
+    font-size: 15px;
+    padding-right: 40px;
+  }
+
+  .durood-scroll {
+    animation-duration: 60s;
+  }
+}
+/* ============================================
+   RESPONSIVE FIXES
+   ============================================ */
+
+@media (max-width: 768px) {
+  .durood-scroll {
+    font-size: 18px;
+    animation-duration: 20s;
+    padding: 0 15px;
+  }
+  
+  .durood-scroll .star {
+    margin: 0 15px;
+    font-size: 14px;
+  }
+  
+  .durood-scroll .divider {
+    margin: 0 15px;
+    font-size: 16px;
+  }
+  
+  .durood-banner {
+    padding: 12px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .durood-scroll {
+    font-size: 14px;
+    animation-duration: 40s;
+    padding: 0 10px;
+    letter-spacing: 0.5px;
+  }
+  
+  .durood-scroll .star {
+    margin: 0 10px;
+    font-size: 12px;
+  }
+  
+  .durood-scroll .divider {
+    margin: 0 10px;
+    font-size: 12px;
+  }
+  
+  .durood-banner {
+    padding: 8px 0;
+  }
+}
+
+/* ============================================
+   REMOVE NUMBER ARROWS
+   ============================================ */
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+/* ============================================
+   RESPONSIVE FIXES
+   ============================================ */
+
+@media (max-width: 768px) {
+  .durood-scroll {
+    font-size: 18px;
+    animation-duration: 15s;
+    padding: 0 15px;
+  }
+  
+  .durood-scroll .star {
+    margin: 0 20px;
+    font-size: 18px;
+  }
+  
+  .durood-banner {
+    padding: 20px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .durood-scroll {
+    font-size: 14px;
+    animation-duration: 15s;
+    padding: 0 15px;
+  }
+  
+  .durood-scroll .star {
+    margin: 0 3px;
+    font-size: 18px;
+  }
+  
+  .durood-banner {
+    padding: 4px 0;
+  }
+}
+/* Volume Slider Styling */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 8px;
+  border-radius: 30%;
+  background: #D4AF37;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 10px;
+  height: 8px;
+  border-radius: 30%;
+  background: #D4AF37;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: #4a5568;
+  border-radius: 1px;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: #4a5568;
+  border-radius: 1px;
+}
+input[type="range"] {
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.15);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #D4AF37;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #D4AF37;
+  border: none;
+  cursor: pointer;
+}
+/* ============================================
+   SPLASH SCREEN ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes loading-bar {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 70%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+
+.animate-loading-bar {
+  animation: loading-bar 2.5s ease-in-out forwards;
+}
