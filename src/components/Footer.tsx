@@ -124,8 +124,9 @@ export default function Footer() {
                 { name: 'Home', link: '/' },
                 { name: 'About Us', link: '/about' },
                 { name: 'Durood Shareef', link: '/resources/durood' },
-                { name: 'Books', link: '/resources/books' },
-                { name: 'Audio', link: '/resources/audio' },
+                { name: 'Durood Count', link: '/durood-count' },
+                { name: 'News', link: '/news' },
+                { name: 'Gallery', link: '/gallery' },
                 { name: 'Contact Us', link: '/contact' }
               ].map((item) => (
                 <li key={item.name}>
@@ -153,6 +154,7 @@ export default function Footer() {
                 { name: 'Audio Library', link: '/resources/audio', icon: <FaHeadphones className="text-green-400" /> },
                 { name: 'Books & PDFs', link: '/resources/books', icon: <GiBookCover className="text-gold-400" /> },
                 { name: 'Bayan', link: '/resources/bayan', icon: <FaVideo className="text-purple-400" /> },
+                { name: 'Video Library', link: '/resources/videos', icon: <FaVideo className="text-red-400" /> },
                 { name: 'Articles & Insights', link: '/blog', icon: <FaBlog className="text-blue-400" /> },
                 { name: 'Ask & Learn', link: '/resources/ask', icon: <FaQuestionCircle className="text-orange-400" /> }
               ].map((item) => (

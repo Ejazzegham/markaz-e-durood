@@ -1,6 +1,7 @@
 'use client'
 
 import AudioPlayer from '@/components/AudioPlayer'
+import TopSendersLeaderboard from '@/components/home/TopSendersLeaderboard'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { 
@@ -207,37 +208,43 @@ export default function Home() {
             <div className="mt-8 flex justify-center">
               <Link
                 href="/durood-count"
-                className="group relative"
+                className="group relative w-full max-w-md"
                 aria-label="View live Durood count"
               >
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-gold-500/40 via-gold-500/10 to-gold-500/40 rounded-2xl blur-md opacity-70 group-hover:opacity-100 transition-opacity"></div>
-                <div className="relative bg-black/40 backdrop-blur-xl border border-gold-500/30 group-hover:border-gold-500/50 rounded-2xl px-6 sm:px-10 py-4 sm:py-5 flex flex-wrap items-center justify-center gap-4 sm:gap-5 transition-colors">
-                  {/* Live badge */}
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="relative flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                    </span>
-                    <span className="text-red-400 text-[11px] font-bold tracking-widest uppercase">Live</span>
-                  </div>
+                <div className="relative overflow-hidden rounded-2xl border border-gold-500/25 bg-gradient-to-b from-white/[0.06] to-black/30 backdrop-blur-xl px-6 sm:px-8 py-5 transition-all duration-300 hover:border-gold-500/50 hover:from-white/[0.09] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)]">
+                  {/* Thin top accent line — replaces the old blurred glow */}
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-400/70 to-transparent"></div>
 
-                  <div className="w-px h-10 bg-gold-500/20 hidden sm:block"></div>
-
-                  {/* Count */}
-                  <div className="text-left">
-                    <p className="text-gray-400 text-[10px] sm:text-[11px] uppercase tracking-wider mb-0.5">
-                      Durood Shareef Sent Worldwide
-                    </p>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-gold-500 text-2xl sm:text-3xl font-black font-mono tabular-nums">
-                        {liveDuroodCount.toLocaleString('en-US')}
+                  <div className="flex items-center justify-between gap-4 sm:gap-6">
+                    {/* Live badge */}
+                    <div className="flex flex-col items-center gap-1.5 shrink-0">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                       </span>
-                      {justAdded > 0 && (
-                        <span key={tickKey} className="text-green-400 text-xs font-semibold animate-fadeIn">
-                          +{justAdded}
-                        </span>
-                      )}
+                      <span className="text-red-400/90 text-[9px] font-bold tracking-[0.15em] uppercase">Live</span>
                     </div>
+
+                    <div className="w-px h-9 bg-white/10 shrink-0"></div>
+
+                    {/* Count */}
+                    <div className="text-left flex-1 min-w-0">
+                      <p className="text-gray-400 text-[10px] sm:text-[11px] uppercase tracking-wider mb-1">
+                        Durood Shareef Sent Worldwide
+                      </p>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-gold-400 text-2xl sm:text-3xl font-bold font-mono tabular-nums tracking-tight">
+                          {liveDuroodCount.toLocaleString('en-US')}
+                        </span>
+                        {justAdded > 0 && (
+                          <span key={tickKey} className="text-green-400 text-xs font-semibold animate-fadeIn">
+                            +{justAdded}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <FaArrowRight className="text-gold-500/40 group-hover:text-gold-500 group-hover:translate-x-1 transition-all duration-300 text-sm shrink-0" />
                   </div>
                 </div>
               </Link>
@@ -268,6 +275,9 @@ export default function Home() {
           />
         </div>
       </section>
+
+      {/* Top Durood Senders — Today / Weekly / Monthly leaderboard with chart */}
+      <TopSendersLeaderboard />
 
       {/* Features Section */}
       <section className="py-16 bg-gray-50 px-4">

@@ -128,6 +128,7 @@ export async function GET() {
       categoryBreakdown,
       recentActivity,
       leaderboard: {
+        today: buildLeaderboard(todayStart),
         weekly: buildLeaderboard(weekStart),
         monthly: buildLeaderboard(monthStart),
         allTime: buildLeaderboard(null),
