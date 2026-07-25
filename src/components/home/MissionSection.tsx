@@ -106,7 +106,7 @@ export default function MissionSection() {
 
             <div className="relative flex-1 min-h-[340px] sm:min-h-[420px] lg:min-h-0 rounded-2xl overflow-hidden border-2 border-gold-500/25 group-hover:border-gold-500/50 transition-all duration-500 shadow-2xl shadow-black/40 bg-gradient-to-b from-green-900/60 to-green-950/70">
               <Image
-                src="/public/sultan-fiaz-ul-hassan.png"
+                src="/mission/sultan-fiaz-ul-hassan.png"
                 alt="Sultan Fiaz-ul-Hassan Qadri"
                 fill
                 sizes="(max-width: 1024px) 100vw, 45vw"
