@@ -1,33 +1,83 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   FaDonate,
   FaUser,
   FaEnvelope,
   FaArrowLeft,
-  FaCheckCircle
+  FaCheckCircle,
+  FaLock
 } from 'react-icons/fa'
 
 export default function DonatePage() {
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     amount: '',
-    message: ''
+    message: '',
+    anonymous: false,
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // This page is open to everyone — no account required. If the visitor
+  // happens to be signed in, prefill their account name/email so they don't
+  // have to retype it (they can still tick "donate anonymously").
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.user) {
+          setFormData((prev) => ({
+            ...prev,
+            name: prev.name || data.user.name || '',
+            email: prev.email || data.user.email || '',
+          }))
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError('')
 
-    setSubmitted(true)
+    const amount = parseFloat(formData.amount)
+    if (!amount || amount <= 0) {
+      setError('Please enter a valid donation amount.')
+      return
+    }
 
-    setTimeout(() => {
-      setSubmitted(false)
-    }, 3000)
+    setSubmitting(true)
+    try {
+      const res = await fetch('/api/donations/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          donorName: formData.anonymous ? undefined : formData.name || undefined,
+          email: formData.email || undefined,
+          amount,
+          message: formData.message || undefined,
+          isAnonymous: formData.anonymous,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || 'Could not submit. Please try again.')
+        return
+      }
+      setFormData({ name: formData.name, email: formData.email, amount: '', message: '', anonymous: false })
+      setSubmitted(true)
+      setTimeout(() => setSubmitted(false), 4000)
+    } catch {
+      setError('Could not submit. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -38,7 +88,7 @@ export default function DonatePage() {
           relative
           w-full
           max-w-5xl
-          lg:h-[650px]
+          lg:h-[680px]
           rounded-3xl
           lg:rounded-[25px]
           overflow-hidden
@@ -56,7 +106,7 @@ export default function DonatePage() {
         <div className="absolute inset-0 bg-black/60 lg:bg-black/20" />
 
         {/* Content */}
-        <div className="relative z-10 flex items-center justify-center lg:justify-end px-5 py-10 sm:px-8 lg:px-0 lg:py-0 lg:h-full">
+        <div className="relative z-10 flex items-center justify-center lg:justify-end px-5 py-10 sm:px-8 lg:px-0 lg:py-0 lg:h-full overflow-y-auto">
 
           <div className="w-full max-w-[420px] sm:max-w-[460px] lg:max-w-[520px] lg:mr-16">
 
@@ -74,7 +124,7 @@ export default function DonatePage() {
 
             <p className="text-white/80 mb-8">
               Help us spread Durood & Salam worldwide.
-              Every contribution supports our mission.
+              Every contribution supports our mission — no account needed.
             </p>
 
             {submitted ? (
@@ -87,7 +137,7 @@ export default function DonatePage() {
                 </h2>
 
                 <p className="text-white/80">
-                  Your donation request has been received.
+                  Your donation request has been received. Our team will be in touch to complete the contribution.
                 </p>
 
               </div>
@@ -104,7 +154,8 @@ export default function DonatePage() {
                     <input
                       type="text"
                       placeholder="Full Name"
-                      required
+                      disabled={formData.anonymous}
+                      required={!formData.anonymous}
                       value={formData.name}
                       onChange={(e) =>
                         setFormData({
@@ -126,6 +177,7 @@ export default function DonatePage() {
                         placeholder-white/60
                         focus:outline-none
                         focus:border-gold-500
+                        disabled:opacity-50
                       "
                     />
                   </div>
@@ -140,8 +192,7 @@ export default function DonatePage() {
 
                     <input
                       type="email"
-                      placeholder="Email Address"
-                      required
+                      placeholder="Email Address (optional)"
                       value={formData.email}
                       onChange={(e) =>
                         setFormData({
@@ -173,7 +224,10 @@ export default function DonatePage() {
                 <div className="mb-4">
                   <input
   type="number"
-  placeholder="Donation Amount"
+  min="1"
+  step="1"
+  placeholder="Donation Amount (PKR)"
+  required
   value={formData.amount}
   onChange={(e) =>
     setFormData({
@@ -201,7 +255,7 @@ export default function DonatePage() {
                 </div>
 
                 {/* Message */}
-                <div className="mb-6">
+                <div className="mb-4">
                   <textarea
                     rows={3}
                     placeholder="Message (Optional)"
@@ -229,14 +283,57 @@ export default function DonatePage() {
                   />
                 </div>
 
+                {/* Anonymous */}
+                <div
+                  className="
+                    flex
+                    items-center
+                    gap-3
+                    mb-4
+                    bg-white/10
+                    backdrop-blur-md
+                    border
+                    border-white/20
+                    rounded-full
+                    px-6
+                    py-4
+                  "
+                >
+                  <input
+                    type="checkbox"
+                    checked={formData.anonymous}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        anonymous: e.target.checked
+                      })
+                    }
+                    className="w-5 h-5"
+                  />
+
+                  <label className="text-white flex items-center gap-2">
+                    <FaLock className="text-gold-500" />
+                    Donate anonymously
+                  </label>
+                </div>
+
+                {error && (
+                  <p className="text-red-300 bg-red-500/10 border border-red-500/30 rounded-full px-5 py-2.5 text-sm mb-4 text-center">
+                    {error}
+                  </p>
+                )}
+
                 <button
                   type="submit"
+                  disabled={submitting}
                   className="
                     w-full
                     h-14
                     rounded-full
                     bg-gold-500
                     hover:bg-gold-600
+                    disabled:opacity-60
+                    disabled:cursor-not-allowed
                     text-black
                     font-bold
                     flex
@@ -247,7 +344,7 @@ export default function DonatePage() {
                   "
                 >
                   <FaDonate />
-                  Donate Now
+                  {submitting ? 'Submitting...' : 'Donate Now'}
                 </button>
 
               </form>

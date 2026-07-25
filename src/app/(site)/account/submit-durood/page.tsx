@@ -10,8 +10,9 @@ export default function SubmitDurood() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
-  // The page is gated to logged-in members, so prefill their name from the
-  // account they're signed in with (they can still tick "submit anonymously"
+  // This page is open to everyone — guests can type any name they like.
+  // If the visitor happens to be signed in, prefill their account name so
+  // they don't have to retype it (they can still tick "submit anonymously"
   // if they don't want it shown publicly).
   useEffect(() => {
     fetch('/api/auth/me')
@@ -132,6 +133,7 @@ return (
     <input
       type="text"
       value={formData.name}
+      disabled={formData.anonymous}
       onChange={(e) =>
         setFormData({
           ...formData,
@@ -139,7 +141,7 @@ return (
         })
       }
       placeholder="Your Name"
-      required
+      required={!formData.anonymous}
       className="
         w-full
         h-14

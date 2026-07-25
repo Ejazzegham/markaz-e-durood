@@ -24,7 +24,8 @@ import {
   FaCog,
   FaBell,
   FaSearch,
-  FaHistory
+  FaHistory,
+  FaDonate
 } from 'react-icons/fa'
 import { GiPrayer, GiBookCover } from 'react-icons/gi'
 import { MdDashboard, MdMenuBook } from 'react-icons/md'
@@ -35,6 +36,8 @@ export default function Dashboard() {
   const [me, setMe] = useState<{ name: string; email: string; role: string } | null>(null)
   const [myHistory, setMyHistory] = useState<any[]>([])
   const [myTotalCount, setMyTotalCount] = useState(0)
+  const [myDonations, setMyDonations] = useState<any[]>([])
+  const [myTotalDonated, setMyTotalDonated] = useState(0)
   const [stats, setStats] = useState({
     totalDurood: 0,
     totalResources: 0,
@@ -54,8 +57,9 @@ export default function Dashboard() {
       fetch('/api/dashboard/summary').then((r) => r.json()),
       fetch('/api/durood/stats').then((r) => r.json()),
       fetch('/api/dashboard/my-submissions').then((r) => (r.ok ? r.json() : null)),
+      fetch('/api/dashboard/my-donations').then((r) => (r.ok ? r.json() : null)),
     ])
-      .then(([meData, summary, duroodStats, mySubs]) => {
+      .then(([meData, summary, duroodStats, mySubs, myDonationsData]) => {
         // The page is also protected by middleware, but if the session
         // cookie has expired client-side, bounce back to login instead of
         // silently showing an empty dashboard.
@@ -95,6 +99,10 @@ export default function Dashboard() {
         if (mySubs) {
           setMyHistory(mySubs.submissions || [])
           setMyTotalCount(mySubs.totalCount || 0)
+        }
+        if (myDonationsData) {
+          setMyDonations(myDonationsData.donations || [])
+          setMyTotalDonated(myDonationsData.totalAmount || 0)
         }
       })
       .finally(() => setLoading(false))
@@ -297,6 +305,71 @@ export default function Dashboard() {
                               : 'bg-green-500/10 text-green-400'
                           }`}>
                             {sub.isAnonymous ? 'Anonymous' : 'Public'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ============================================
+            MY DONATION HISTORY (personal, logged-in user only)
+            ============================================ */}
+        <div className="bg-green-850/80 border border-gold-500/20 rounded-xl overflow-hidden hover:border-gold-500/40 transition-all mb-8">
+          <div className="px-5 py-4 border-b border-gold-500/10 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FaDonate className="text-gold-500 text-sm" />
+              <h3 className="text-white font-semibold">My Donations</h3>
+            </div>
+            <span className="text-xs text-gray-400">
+              Total donated: <span className="text-gold-500 font-mono font-bold">PKR {formatNumber(myTotalDonated)}</span>
+            </span>
+          </div>
+          <div className="p-4">
+            {myDonations.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500 text-sm mb-4">You haven't made any donations yet.</p>
+                <Link
+                  href="/account/donate"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gold-500 hover:bg-gold-600 text-black text-sm font-bold transition-all"
+                >
+                  <FaDonate /> Donate Now
+                </Link>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="text-gray-500 text-[10px] uppercase tracking-wider">
+                      <th className="pb-2 font-semibold">Date</th>
+                      <th className="pb-2 font-semibold">Message</th>
+                      <th className="pb-2 font-semibold text-right">Amount</th>
+                      <th className="pb-2 font-semibold text-right">Visibility</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {myDonations.map((don) => (
+                      <tr key={don.id} className="border-t border-gold-500/10">
+                        <td className="py-2.5 text-gray-300 text-xs">
+                          {new Date(don.createdAt).toLocaleDateString(undefined, {
+                            year: 'numeric', month: 'short', day: 'numeric',
+                          })}
+                        </td>
+                        <td className="py-2.5 text-gray-300 text-xs max-w-[220px] truncate">{don.message || '—'}</td>
+                        <td className="py-2.5 text-gold-500 font-mono text-sm text-right">
+                          {don.currency} {formatNumber(don.amount)}
+                        </td>
+                        <td className="py-2.5 text-right">
+                          <span className={`text-[10px] px-2 py-1 rounded-full ${
+                            don.isAnonymous
+                              ? 'bg-gray-500/10 text-gray-400'
+                              : 'bg-green-500/10 text-green-400'
+                          }`}>
+                            {don.isAnonymous ? 'Anonymous' : 'Public'}
                           </span>
                         </td>
                       </tr>

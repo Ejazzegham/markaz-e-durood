@@ -19,18 +19,13 @@ function getClientIp(request: NextRequest): string {
 
 export async function POST(request: NextRequest) {
   try {
-    // Submitting Durood is now a member-only action — the page itself is
-    // gated by middleware, but we check again here so the API can't be
-    // called directly by a signed-out visitor.
+    // Submitting Durood works for both guests and signed-in members. If a
+    // valid session cookie is present we attach the submission to that
+    // account (so it shows up in the member's dashboard history); if not,
+    // we still accept the submission under whatever name the visitor typed
+    // (or "Anonymous") so no one is forced to register first.
     const userToken = request.cookies.get(USER_COOKIE_NAME)?.value
     const userPayload = userToken ? await verifyAdminToken(userToken) : null
-
-    if (!userPayload) {
-      return NextResponse.json(
-        { error: 'Please log in to submit Durood.' },
-        { status: 401 }
-      )
-    }
 
     const body = await request.json()
     const parsed = submitSchema.safeParse(body)
@@ -38,6 +33,16 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json(
         { error: 'Please enter a valid count (1–100,000) and try again.' },
+        { status: 400 }
+      )
+    }
+
+    // Guests must give a name unless they're submitting anonymously — a
+    // signed-in member can leave it blank and we'll fall back to their
+    // account name instead.
+    if (!userPayload && !parsed.data.isAnonymous && !parsed.data.userName) {
+      return NextResponse.json(
+        { error: 'Please enter your name, or choose to submit anonymously.' },
         { status: 400 }
       )
     }
@@ -63,13 +68,16 @@ export async function POST(request: NextRequest) {
 
     const isAnonymous = parsed.data.isAnonymous ?? !parsed.data.userName
     // The display name respects "submit anonymously" for public listings,
-    // but we still tag every submission with the real userId below so the
-    // signed-in user can see their own full history in their dashboard.
-    const userName = isAnonymous ? 'Anonymous' : (parsed.data.userName as string) || userPayload.name
+    // but for signed-in members we still tag every submission with their
+    // real userId below so they can see their own full history in their
+    // dashboard even when the public-facing name is "Anonymous".
+    const userName = isAnonymous
+      ? 'Anonymous'
+      : (parsed.data.userName as string) || userPayload?.name || 'Anonymous'
 
     const now = new Date()
     const data = {
-      userId: userPayload.userId,
+      userId: userPayload?.userId ?? null,
       userName,
       duroodCount: parsed.data.duroodCount,
       duroodType: parsed.data.duroodType || 'General',

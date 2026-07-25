@@ -184,6 +184,10 @@ export default function Navbar() {
                   Durood Count
                 </Link>
 
+                <Link href="/account/donate" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                  Donate
+                </Link>
+
                 <Link href="/news" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
                   News
                 </Link>
@@ -394,6 +398,19 @@ export default function Navbar() {
                   <FaHeart className="text-red-400 text-sm" />
                 </div>
                 <span className="text-white text-sm font-medium">Durood Count</span>
+              </Link>
+
+              <Link
+                href="/account/donate"
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 group ${
+                  isActive('/account/donate') ? 'bg-gold-500/10' : 'hover:bg-white/10'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="w-8 h-8 rounded-lg bg-gold-500/10 border border-gold-500/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                  <FaDonate className="text-gold-400 text-sm" />
+                </div>
+                <span className="text-white text-sm font-medium">Donate</span>
               </Link>
 
               <Link
