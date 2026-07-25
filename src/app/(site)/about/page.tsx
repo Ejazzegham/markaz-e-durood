@@ -133,12 +133,15 @@ export default function About() {
               </p>
             </div>
 
-            {/* Urdu Text — professional Nastaliq typography */}
-            <div className="bg-green-850/60 border border-gold-500/10 rounded-xl p-5 sm:p-6">
-              <p className="font-urdu text-lg sm:text-xl text-gold-400">
+            {/* Urdu Text — professional Nastaliq typography, labeled callout */}
+            <div className="relative bg-green-850/60 border border-gold-500/10 border-r-4 border-r-gold-500/60 rounded-xl p-5 sm:p-6 pt-4">
+              <span className="font-urdu inline-block text-gold-500/90 text-xs font-bold tracking-wide bg-gold-500/10 border border-gold-500/20 rounded-full px-3 py-1 mb-3">
+                اردو ترجمہ
+              </span>
+              <p dir="rtl" className="font-urdu text-lg sm:text-xl text-gold-400">
                 یہ ویب سائٹ پوری دنیا میں درود شریف اور اس کی برکات کو جمع کرنے اور اسے فروغ دینے کے لیے وقف ہے۔ درود شریف کے فوائد وڈیوز، لیکچرز، نعتوں، کتابوں اور مضامین کے ذریعے شیئر کیے جائیں گے۔ انشاء اللہ اس ویب سائٹ کو دیکھنے والے روحانی طور پر بلند ہو جائیں گے اور دوسروں کے ساتھ برکات بانٹنے کی ترغیب دی جاتی ہے۔
               </p>
-              <p className="font-urdu text-gold-500 font-bold text-base sm:text-lg mt-3 pt-3 border-t border-gold-500/10">
+              <p dir="rtl" className="font-urdu text-gold-500 font-bold text-base sm:text-lg mt-3 pt-3 border-t border-gold-500/10">
                 اس سفر میں ہمارے ساتھ شامل ہوں اور روزانہ 50 ملین سے زیادہ درود کے ہدف تک پہنچنے میں ہماری مدد کریں
               </p>
             </div>

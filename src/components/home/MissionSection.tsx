@@ -78,16 +78,20 @@ export default function MissionSection() {
               </p>
             </div>
 
-            {/* Urdu block — professional Nastaliq font, right-aligned RTL */}
-            <div className="bg-green-850/60 border border-gold-500/15 rounded-2xl p-5 sm:p-6">
-              <p className="font-urdu text-gold-400 text-xl sm:text-2xl">
+            {/* Urdu block — professional Nastaliq font, right-aligned RTL,
+                with a labeled callout treatment matching the site's premium look */}
+            <div className="relative bg-green-850/60 border border-gold-500/15 border-r-4 border-r-gold-500/60 rounded-2xl p-5 sm:p-6 pt-4">
+              <span className="font-urdu inline-block text-gold-500/90 text-xs font-bold tracking-wide bg-gold-500/10 border border-gold-500/20 rounded-full px-3 py-1 mb-3">
+                اردو ترجمہ
+              </span>
+              <p dir="rtl" className="font-urdu text-gold-400 text-xl sm:text-2xl">
                 یہ ویب سائٹ پوری دنیا میں درود شریف اور اس کی برکات کو جمع کرنے اور اسے
                 فروغ دینے کے لیے وقف ہے۔ درود شریف کے فوائد وڈیوز، لیکچرز، نعتوں، کتابوں
                 اور مضامین کے ذریعے شیئر کیے جائیں گے۔ انشاء اللہ اس ویب سائٹ کو دیکھنے
                 والے روحانی طور پر بلند ہو جائیں گے اور دوسروں کے ساتھ برکات بانٹنے کی
                 ترغیب دی جاتی ہے۔
               </p>
-              <p className="font-urdu text-gold-500 font-bold text-lg sm:text-xl mt-3 pt-3 border-t border-gold-500/10">
+              <p dir="rtl" className="font-urdu text-gold-500 font-bold text-lg sm:text-xl mt-3 pt-3 border-t border-gold-500/10">
                 اس سفر میں ہمارے ساتھ شامل ہوں اور روزانہ 50 ملین سے زیادہ درود کے ہدف
                 تک پہنچنے میں ہماری مدد کریں
               </p>

@@ -3,7 +3,6 @@
 import AudioPlayer from '@/components/AudioPlayer'
 import TopSendersLeaderboard from '@/components/home/TopSendersLeaderboard'
 import MissionSection from '@/components/home/MissionSection'
-import GalleryHighlights from '@/components/home/GalleryHighlights'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { 
@@ -150,20 +149,24 @@ export default function Home() {
             {/* First Copy */}
             <div className="durood-item">
               <span className="star">✦</span>
-              إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ ۚ يَا أَيُّهَا الَّذِينَ آمَنُوا صَلُّوا عَلَيْهِ وَسَلِّمُوا تَسْلِيمًا
+              <bdi className="durood-ayah">إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ ۚ يَا أَيُّهَا الَّذِينَ آمَنُوا صَلُّوا عَلَيْهِ وَسَلِّمُوا تَسْلِيمًا</bdi>
               <span className="star">✦</span>
               <span className="divider">|</span>
-              ترجمہ: بیشک اللہ اور اس کے فرشتے نبی ﷺ پر درود بھیجتے ہیں، اے ایمان والو! تم بھی ان پر درود و سلام بھیجا کرو۔
+              <bdi className="font-urdu durood-translation">
+                <span className="durood-translation-label">ترجمہ:</span> بیشک اللہ اور اس کے فرشتے نبی ﷺ پر درود بھیجتے ہیں، اے ایمان والو! تم بھی ان پر درود و سلام بھیجا کرو۔
+              </bdi>
               <span className="star">✦</span>
             </div>
 
             {/* Second Copy */}
             <div className="durood-item">
               <span className="star">✦</span>
-              إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ ۚ يَا أَيُّهَا الَّذِينَ آمَنُوا صَلُّوا عَلَيْهِ وَسَلِّمُوا تَسْلِيمًا
+              <bdi className="durood-ayah">إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ ۚ يَا أَيُّهَا الَّذِينَ آمَنُوا صَلُّوا عَلَيْهِ وَسَلِّمُوا تَسْلِيمًا</bdi>
               <span className="star">✦</span>
               <span className="divider">|</span>
-              ترجمہ: بیشک اللہ اور اس کے فرشتے نبی ﷺ پر درود بھیجتے ہیں، اے ایمان والو! تم بھی ان پر درود و سلام بھیجا کرو۔
+              <bdi className="font-urdu durood-translation">
+                <span className="durood-translation-label">ترجمہ:</span> بیشک اللہ اور اس کے فرشتے نبی ﷺ پر درود بھیجتے ہیں، اے ایمان والو! تم بھی ان پر درود و سلام بھیجا کرو۔
+              </bdi>
               <span className="star">✦</span>
             </div>
           </div>
@@ -416,9 +419,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Picture Gallery — with like button + counter on each photo */}
-      <GalleryHighlights />
 
       {/* Stats Section - Full Width */}
       <section className="py-16 bg-green-900 text-white px-4">
