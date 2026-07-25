@@ -3,15 +3,10 @@ import Image from 'next/image'
 import { 
   FaMosque, 
   FaHeart, 
-  FaQuran, 
   FaGlobe,
   FaUsers,
   FaHands,
-  FaArrowRight,
-  FaBookOpen,
-  FaVideo,
-  FaMicrophone,
-  FaNewspaper
+  FaArrowRight
 } from 'react-icons/fa'
 
 export default function About() {
@@ -137,32 +132,24 @@ export default function About() {
               </p>
             </div>
 
-            {/* Urdu Text — professional Nastaliq typography, labeled callout */}
-            <div className="relative bg-green-850/60 border border-gold-500/10 border-r-4 border-r-gold-500/60 rounded-xl p-5 sm:p-6 pt-4">
-              <span className="font-urdu inline-block text-gold-500/90 text-xs font-bold tracking-wide bg-gold-500/10 border border-gold-500/20 rounded-full px-3 py-1 mb-3">
-                اردو ترجمہ
-              </span>
-              <p dir="rtl" className="font-urdu text-lg sm:text-xl text-gold-400">
+            {/* Urdu Text — same book-style treatment as the home page:
+                one continuous, justified paragraph (no per-line boxes),
+                white body text with a gold, bold call-to-action line. */}
+            <div className="relative bg-green-850/60 border border-gold-500/10 border-r-4 border-r-gold-500/60 rounded-xl p-5 sm:p-6">
+              <p
+                dir="rtl"
+                className="font-urdu text-white text-base sm:text-lg"
+                style={{ textAlign: 'justify', textAlignLast: 'right' }}
+              >
                 یہ ویب سائٹ پوری دنیا میں درود شریف اور اس کی برکات کو جمع کرنے اور اسے فروغ دینے کے لیے وقف ہے۔ درود شریف کے فوائد وڈیوز، لیکچرز، نعتوں، کتابوں اور مضامین کے ذریعے شیئر کیے جائیں گے۔ انشاء اللہ اس ویب سائٹ کو دیکھنے والے روحانی طور پر بلند ہو جائیں گے اور دوسروں کے ساتھ برکات بانٹنے کی ترغیب دی جاتی ہے۔
               </p>
-              <p dir="rtl" className="font-urdu text-gold-500 font-bold text-base sm:text-lg mt-3 pt-3 border-t border-gold-500/10">
-                اس سفر میں ہمارے ساتھ شامل ہوں اور روزانہ 50 ملین سے زیادہ درود کے ہدف تک پہنچنے میں ہماری مدد کریں
+              <p
+                dir="rtl"
+                className="font-urdu text-gold-400 font-bold text-base sm:text-lg mt-3 pt-3 border-t border-gold-500/10"
+                style={{ textAlign: 'justify', textAlignLast: 'right' }}
+              >
+                اس سفر میں ہمارے ساتھ شامل ہوں اور روزانہ 50 ملین سے زیادہ درود کے ہدف تک پہنچنے میں ہماری مدد کریں۔
               </p>
-            </div>
-
-            {/* Key Points */}
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { icon: <FaBookOpen />, label: 'Books & Articles' },
-                { icon: <FaVideo />, label: 'Videos & Lectures' },
-                { icon: <FaMicrophone />, label: 'Naats & Bayan' },
-                { icon: <FaNewspaper />, label: 'Daily Updates' }
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2 bg-green-850/60 border border-gold-500/10 rounded-lg px-3 py-2">
-                  <span className="text-gold-500">{item.icon}</span>
-                  <span className="text-gray-300 text-xs">{item.label}</span>
-                </div>
-              ))}
             </div>
           </div>
 
@@ -173,26 +160,24 @@ export default function About() {
               column always stretches to match the text
               column's height exactly.
               ============================================ */}
-          <div className="relative group w-full h-[420px] sm:h-[480px] lg:h-auto flex flex-col">
+          <div className="relative group w-full min-h-[420px] sm:min-h-[480px] lg:min-h-0 flex flex-col">
             {/* Decorative Glow Behind Image */}
             <div className="absolute -inset-8 bg-gold-500/10 rounded-3xl blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
             
-            {/* Image Container */}
-            <div className="relative flex-1 min-h-0 rounded-3xl overflow-hidden border-2 border-gold-500/20 group-hover:border-gold-500/40 transition-all duration-500 shadow-2xl shadow-gold-500/10 group-hover:shadow-gold-500/30">
+            {/* Image Container — object-contain inside a padded frame so
+                the complete artwork is always visible, never cropped */}
+            <div className="relative flex-1 min-h-0 rounded-3xl overflow-hidden border-2 border-gold-500/20 group-hover:border-gold-500/40 transition-all duration-500 shadow-2xl shadow-gold-500/10 group-hover:shadow-gold-500/30 bg-gradient-to-b from-green-900/60 to-green-950/70">
               <Image
                 src="/about/durood-shareef.png"
                 alt="Durood Shareef — Salawat upon Prophet Muhammad ﷺ"
                 fill
                 sizes="(max-width: 1024px) 100vw, 45vw"
-                className="object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                className="object-contain p-4 sm:p-6 group-hover:scale-105 transition-transform duration-700"
               />
               
-              {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-green-950/60 via-transparent to-transparent"></div>
-              
               {/* Corner Accents */}
-              <div className="absolute top-3 left-3 w-8 h-8 border-t-2 border-l-2 border-gold-500/30 rounded-tl-lg"></div>
-              <div className="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-gold-500/30 rounded-br-lg"></div>
+              <div className="absolute top-3 left-3 w-8 h-8 border-t-2 border-l-2 border-gold-500/30 rounded-tl-lg pointer-events-none"></div>
+              <div className="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-gold-500/30 rounded-br-lg pointer-events-none"></div>
             </div>
 
             {/* Caption — sits below the image instead of overlapping it */}
