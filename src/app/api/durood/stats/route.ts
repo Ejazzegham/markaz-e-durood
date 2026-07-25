@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server'
 import { getDb } from '@/lib/db/firestore'
 
+// Without this, Next.js treats a GET route with no dynamic APIs as static
+// and caches the response at build time — so the counter would freeze at
+// whatever it was when you last deployed instead of reflecting new
+// submissions.
+export const dynamic = 'force-dynamic'
+
 function startOfDay(d: Date) {
   const x = new Date(d)
   x.setHours(0, 0, 0, 0)

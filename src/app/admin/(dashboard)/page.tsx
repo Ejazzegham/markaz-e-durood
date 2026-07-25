@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { getDb } from '@/lib/db/firestore'
 import { FaBookOpen, FaMicrophone, FaHeart, FaImages, FaHeadphones, FaVideo, FaBlog, FaNewspaper, FaQuestionCircle, FaArrowRight } from 'react-icons/fa'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboardPage() {
   const db = getDb()
   const count = async (col: string) => (await db.collection(col).count().get()).data().count

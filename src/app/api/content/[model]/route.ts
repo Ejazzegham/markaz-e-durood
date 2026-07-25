@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { adminModels, isValidModelKey } from '@/lib/admin/models'
 
+export const dynamic = 'force-dynamic'
+
 // Read-only, unauthenticated — this is what the public pages fetch from.
 // Only ever returns content that's meant to be public (published/active).
 export async function GET(
