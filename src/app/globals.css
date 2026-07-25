@@ -258,27 +258,48 @@ input[type="range"]::-moz-range-thumb {
 /* ============================================
    PROFESSIONAL SELECT / DROPDOWN
    Strips the OS default arrow + styling so every
-   <select> (admin category pickers, profile
-   pickers, etc.) matches the site's dark/gold
-   theme instead of looking like a stock browser
-   control.
+   <select> across the site — admin category
+   pickers, profile pickers, and public-facing
+   filters/category dropdowns alike — matches the
+   dark/gold brand theme instead of looking like a
+   stock browser control.
+
+   .admin-select   → used inside /admin
+   .premium-select → same treatment, used on public
+                     (site) pages
+   Both share one base rule so the look never
+   drifts apart between the two areas.
    ============================================ */
-.admin-select {
+.admin-select,
+.premium-select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 7.5l5 5 5-5'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.85rem center;
-  background-size: 14px;
-  padding-right: 2.5rem;
+  background-position: right 0.9rem center;
+  background-size: 13px;
+  padding-right: 2.75rem;
   cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
 }
-.admin-select:disabled {
+.admin-select:hover:not(:disabled),
+.premium-select:hover:not(:disabled) {
+  border-color: rgba(212, 175, 55, 0.5);
+}
+.admin-select:focus,
+.premium-select:focus {
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+.admin-select:disabled,
+.premium-select:disabled {
   cursor: not-allowed;
+  opacity: 0.6;
 }
 /* Dropdown option list — Firefox/Chromium both respect this on <option> */
-.admin-select option {
+.admin-select option,
+.premium-select option {
   background-color: #0e1a12;
   color: #fff;
 }

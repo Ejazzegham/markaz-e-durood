@@ -209,7 +209,7 @@ export default function News() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2.5 bg-green-850/80 border border-gold-500/20 rounded-xl focus:border-gold-500 outline-none text-white transition"
+            className="premium-select pl-4 pr-4 py-2.5 bg-green-850/80 border border-gold-500/20 rounded-xl focus:border-gold-500 outline-none text-white transition"
           >
             {categories.map(cat => (
               <option key={cat} value={cat}>{cat}</option>

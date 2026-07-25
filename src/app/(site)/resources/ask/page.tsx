@@ -262,7 +262,7 @@ export default function AskAndLearn() {
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({...formData, category: e.target.value})}
-                      className="w-full px-4 py-2.5 bg-green-950 border border-gold-500/20 rounded-lg focus:border-gold-500 outline-none text-white transition"
+                      className="premium-select w-full px-4 py-2.5 bg-green-950 border border-gold-500/20 rounded-lg focus:border-gold-500 outline-none text-white transition"
                     >
                       <option value="General">General</option>
                       <option value="Durood">Durood</option>
@@ -322,7 +322,7 @@ export default function AskAndLearn() {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-2.5 bg-green-850/80 border border-gold-500/20 rounded-xl focus:border-gold-500 outline-none text-white transition"
+                className="premium-select pl-4 pr-4 py-2.5 bg-green-850/80 border border-gold-500/20 rounded-xl focus:border-gold-500 outline-none text-white transition"
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>

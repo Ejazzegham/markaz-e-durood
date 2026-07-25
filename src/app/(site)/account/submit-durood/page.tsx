@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { FaHeart, FaUser, FaLock, FaCheckCircle,  FaArrowLeft, FaHands } from 'react-icons/fa'
+import { FaHeart, FaUser, FaLock, FaCheckCircle,  FaArrowLeft, FaHands, FaListUl } from 'react-icons/fa'
+import { DUROOD_CATEGORIES, DUROOD_CATEGORY_OTHER } from '@/constants/duroodCategories'
 
 export default function SubmitDurood() {
   const [formData, setFormData] = useState({ name: '', count: '', anonymous: false })
+  const [category, setCategory] = useState<string>(DUROOD_CATEGORIES[6]) // "Durood" — sensible default
+  const [otherCategory, setOtherCategory] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -35,6 +38,13 @@ export default function SubmitDurood() {
       return
     }
 
+    if (category === DUROOD_CATEGORY_OTHER && !otherCategory.trim()) {
+      setError('Please tell us which Surah/Durood you recited.')
+      return
+    }
+
+    const duroodType = category === DUROOD_CATEGORY_OTHER ? otherCategory.trim() : category
+
     setSubmitting(true)
     try {
       const res = await fetch('/api/durood/submit', {
@@ -43,6 +53,7 @@ export default function SubmitDurood() {
         body: JSON.stringify({
           userName: formData.anonymous ? undefined : formData.name || undefined,
           duroodCount: count,
+          duroodType,
           isAnonymous: formData.anonymous,
         }),
       })
@@ -52,6 +63,8 @@ export default function SubmitDurood() {
         return
       }
       setFormData({ name: '', count: '', anonymous: false })
+      setCategory(DUROOD_CATEGORIES[6])
+      setOtherCategory('')
       setSubmitted(true)
       setTimeout(() => setSubmitted(false), 3000)
     } catch {
@@ -158,6 +171,63 @@ return (
       "
     />
   </div>
+</div>
+
+{/* Category */}
+<div className="mb-5">
+  <div className="relative">
+    <FaListUl
+      size={16}
+      className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500 z-20 pointer-events-none"
+    />
+    <select
+      value={category}
+      onChange={(e) => setCategory(e.target.value)}
+      className="
+        premium-select
+        w-full
+        h-14
+        rounded-full
+        bg-white/10
+        backdrop-blur-md
+        border border-white/20
+        pl-14
+        pr-10
+        text-white
+        focus:outline-none
+        focus:border-gold-500
+      "
+    >
+      {DUROOD_CATEGORIES.map((c) => (
+        <option key={c} value={c}>{c}</option>
+      ))}
+      <option value={DUROOD_CATEGORY_OTHER}>{DUROOD_CATEGORY_OTHER} (specify below)</option>
+    </select>
+  </div>
+
+  {category === DUROOD_CATEGORY_OTHER && (
+    <input
+      type="text"
+      value={otherCategory}
+      onChange={(e) => setOtherCategory(e.target.value)}
+      placeholder="e.g. Surah Kahf, Durood-e-Ibrahimi..."
+      required
+      className="
+        w-full
+        h-14
+        rounded-full
+        bg-white/10
+        backdrop-blur-md
+        border border-white/20
+        px-5
+        mt-3
+        text-white
+        placeholder-white/60
+        focus:outline-none
+        focus:border-gold-500
+      "
+    />
+  )}
 </div>
 
 {/* Count */}

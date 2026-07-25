@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
 import {
   ResponsiveContainer,
   AreaChart,
@@ -25,10 +25,32 @@ import {
   FaCalendarAlt,
   FaPaperPlane,
   FaSpinner,
-  FaClock
+  FaClock,
+  FaListUl,
+  FaQuran,
+  FaBookOpen,
+  FaTint,
+  FaMoon,
+  FaGem,
+  FaEllipsisH
 } from 'react-icons/fa'
+import { DUROOD_CATEGORIES, DUROOD_CATEGORY_OTHER } from '@/constants/duroodCategories'
 
 const CATEGORY_COLORS = ['#D4AF37', '#8BC34A', '#4FD1C5', '#F6C453']
+
+// Icon shown on each category card — keyed by the exact category name so it
+// lines up with DUROOD_CATEGORIES (and with whatever the stats API sends
+// back in categoryBreakdown).
+const CATEGORY_ICONS: Record<string, ReactNode> = {
+  'Surah Yaseen': <FaBookOpen />,
+  'Surah Rehman': <FaTint />,
+  'Surah Mulk': <FaCrown />,
+  'Surah Muzammil': <FaMoon />,
+  'Complete Quran': <FaQuran />,
+  'Durood e Taj': <FaGem />,
+  'Durood': <FaHeart />,
+  [DUROOD_CATEGORY_OTHER]: <FaEllipsisH />,
+}
 
 function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload || !payload.length) return null
@@ -79,7 +101,8 @@ export default function DuroodCount() {
   // Submission widget state
   const [name, setName] = useState('')
   const [count, setCount] = useState(33)
-  const [duroodType, setDuroodType] = useState('General')
+  const [category, setCategory] = useState<string>(DUROOD_CATEGORIES[6]) // "Durood" default
+  const [otherCategory, setOtherCategory] = useState('')
   const [anonymous, setAnonymous] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
@@ -102,6 +125,13 @@ export default function DuroodCount() {
     e.preventDefault()
     setSubmitError('')
     setSubmitMessage('')
+
+    if (category === DUROOD_CATEGORY_OTHER && !otherCategory.trim()) {
+      setSubmitError('Please tell us which Surah/Durood you recited.')
+      return
+    }
+    const duroodType = category === DUROOD_CATEGORY_OTHER ? otherCategory.trim() : category
+
     setSubmitting(true)
     try {
       const res = await fetch('/api/durood/submit', {
@@ -121,6 +151,8 @@ export default function DuroodCount() {
       }
       setSubmitMessage(`Jazak Allah Khair! ${count.toLocaleString()} added to the global count.`)
       setCount(33)
+      setCategory(DUROOD_CATEGORIES[6])
+      setOtherCategory('')
       loadStats()
       setTimeout(() => setSubmitMessage(''), 4000)
     } catch {
@@ -131,6 +163,21 @@ export default function DuroodCount() {
   }
 
   const quickCounts = [1, 10, 33, 100, 1000]
+
+  // Build the fixed set of category cards (Complete Quran, every Surah, the
+  // Durood variants, and an aggregated "Other" bucket) from the live
+  // categoryBreakdown — so a card always exists for each option in the
+  // submission dropdown, even before anyone has submitted under it (shows 0).
+  const categoryBreakdown = stats?.categoryBreakdown ?? []
+  const categoryCountMap = new Map(categoryBreakdown.map((c) => [c.category, c.count]))
+  const knownCategorySet = new Set<string>(DUROOD_CATEGORIES)
+  const otherCategoryTotal = categoryBreakdown
+    .filter((c) => !knownCategorySet.has(c.category))
+    .reduce((sum, c) => sum + c.count, 0)
+  const categoryCards = [
+    ...DUROOD_CATEGORIES.map((cat) => ({ name: cat, count: categoryCountMap.get(cat) || 0 })),
+    { name: DUROOD_CATEGORY_OTHER, count: otherCategoryTotal },
+  ]
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-950 via-green-900 to-green-950 py-16 px-4">
@@ -173,14 +220,28 @@ export default function DuroodCount() {
                 />
               </div>
               <div>
-                <label className="text-gray-400 text-xs block mb-1.5">Durood / Dhikr Type</label>
-                <input
-                  type="text"
-                  value={duroodType}
-                  onChange={(e) => setDuroodType(e.target.value)}
-                  placeholder="e.g. Durood Ibrahim"
-                  className="w-full px-3 py-2.5 bg-green-950 border border-gold-500/20 rounded-lg focus:border-gold-500 outline-none text-white text-sm transition"
-                />
+                <label className="text-gray-400 text-xs flex items-center gap-1.5 mb-1.5">
+                  <FaListUl className="text-gold-500/70 text-[10px]" /> Category
+                </label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="premium-select w-full px-3 py-2.5 bg-green-950 border border-gold-500/20 rounded-lg focus:border-gold-500 outline-none text-white text-sm transition"
+                >
+                  {DUROOD_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                  <option value={DUROOD_CATEGORY_OTHER}>{DUROOD_CATEGORY_OTHER} (specify below)</option>
+                </select>
+                {category === DUROOD_CATEGORY_OTHER && (
+                  <input
+                    type="text"
+                    value={otherCategory}
+                    onChange={(e) => setOtherCategory(e.target.value)}
+                    placeholder="e.g. Surah Kahf, Durood-e-Ibrahimi..."
+                    className="w-full mt-2 px-3 py-2.5 bg-green-950 border border-gold-500/20 rounded-lg focus:border-gold-500 outline-none text-white text-sm transition"
+                  />
+                )}
               </div>
             </div>
 
@@ -279,6 +340,46 @@ export default function DuroodCount() {
                   <span className="text-gray-300 text-xs font-medium">This Month</span>
                 </div>
                 <div className="text-xl font-bold text-gold-500 font-mono">{formatNumber(stats.month)}</div>
+              </div>
+            </div>
+
+            {/* ============================================
+                CATEGORY COLLECTION — one card per Durood
+                category (Complete Quran, every Surah, Durood
+                variants, plus an aggregated "Other" card),
+                each showing its own live total.
+                ============================================ */}
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-4">
+                <FaStar className="text-gold-500" />
+                <h3 className="text-white font-semibold">Durood Category Collection</h3>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                {categoryCards.map((c) => {
+                  const isComplete = c.name === 'Complete Quran'
+                  return (
+                    <div
+                      key={c.name}
+                      className={`relative rounded-xl p-5 border transition-all duration-300 hover:-translate-y-1 ${
+                        isComplete
+                          ? 'bg-gradient-to-b from-gold-500/15 to-green-850/80 border-gold-500/40 shadow-[0_0_30px_rgba(212,175,55,0.1)]'
+                          : 'bg-green-850/80 border-gold-500/20 hover:border-gold-500/40'
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 text-lg ${
+                        isComplete ? 'bg-gold-500/20 text-gold-400' : 'bg-gold-500/10 text-gold-500'
+                      }`}>
+                        {CATEGORY_ICONS[c.name] || <FaHeart />}
+                      </div>
+                      <div className="text-gray-300 text-xs font-medium mb-1 truncate" title={c.name}>
+                        {c.name}
+                      </div>
+                      <div className={`font-mono font-bold ${isComplete ? 'text-gold-400 text-2xl' : 'text-gold-500 text-xl'}`}>
+                        {formatNumber(c.count)}
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </div>
 

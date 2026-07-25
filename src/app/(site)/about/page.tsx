@@ -103,8 +103,12 @@ export default function About() {
 
         {/* ============================================
             MAIN CONTENT - 2 COLUMN LAYOUT
+            Uses the same items-stretch + h-auto/flex-1
+            pattern as the home page's "Our Mission"
+            section so the image column always matches
+            the text column's height exactly.
             ============================================ */}
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 items-stretch">
           
           {/* ============================================
               LEFT SIDE - TEXT CONTENT
@@ -164,19 +168,23 @@ export default function About() {
 
           {/* ============================================
               RIGHT SIDE - IMAGE (Rounded Corners)
+              Same w-full h-auto/flex-1 pattern as the
+              home page Mission section's photo, so this
+              column always stretches to match the text
+              column's height exactly.
               ============================================ */}
-          <div className="relative group">
+          <div className="relative group w-full h-[420px] sm:h-[480px] lg:h-auto flex flex-col">
             {/* Decorative Glow Behind Image */}
             <div className="absolute -inset-8 bg-gold-500/10 rounded-3xl blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
             
             {/* Image Container */}
-            <div className="relative rounded-3xl overflow-hidden border-2 border-gold-500/20 group-hover:border-gold-500/40 transition-all duration-500 shadow-2xl shadow-gold-500/10 group-hover:shadow-gold-500/30">
+            <div className="relative flex-1 min-h-0 rounded-3xl overflow-hidden border-2 border-gold-500/20 group-hover:border-gold-500/40 transition-all duration-500 shadow-2xl shadow-gold-500/10 group-hover:shadow-gold-500/30">
               <Image
-                src="/about.png"
-                alt="About Markaz-e-Durood"
-                width={600}
-                height={700}
-                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
+                src="/about/durood-shareef.png"
+                alt="Durood Shareef — Salawat upon Prophet Muhammad ﷺ"
+                fill
+                sizes="(max-width: 1024px) 100vw, 45vw"
+                className="object-cover object-top group-hover:scale-105 transition-transform duration-700"
               />
               
               {/* Overlay Gradient */}
@@ -188,7 +196,7 @@ export default function About() {
             </div>
 
             {/* Caption — sits below the image instead of overlapping it */}
-            <div className="mt-4 flex items-center justify-center gap-2 text-center">
+            <div className="mt-4 flex items-center justify-center gap-2 text-center shrink-0">
               <FaHeart className="text-gold-500/70 text-xs" />
               <p className="text-gray-400 text-xs tracking-wide">
                 Indeed, Allah and His angels send blessings on the Prophet ﷺ
