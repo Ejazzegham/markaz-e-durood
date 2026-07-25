@@ -15,11 +15,14 @@ export interface AdminTokenPayload {
   role: 'USER' | 'ADMIN' | 'SUPER_ADMIN'
 }
 
-export async function signAdminToken(payload: AdminTokenPayload): Promise<string> {
+export async function signAdminToken(
+  payload: AdminTokenPayload,
+  expiresIn: string = '7d'
+): Promise<string> {
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('7d')
+    .setExpirationTime(expiresIn)
     .sign(secret)
 }
 

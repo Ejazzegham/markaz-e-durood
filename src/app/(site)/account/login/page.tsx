@@ -1,11 +1,14 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { FaEnvelope, FaLock, FaArrowRight, FaUser, FaCheckCircle } from 'react-icons/fa'
+import { Suspense, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import { FaEnvelope, FaLock, FaArrowRight, FaUser, FaCheckCircle, FaEye, FaEyeSlash } from 'react-icons/fa'
 
-export default function LoginPage() {
+function LoginPageInner() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('from') || '/'
   const [isRegister, setIsRegister] = useState(false)
 
   const [formData, setFormData] = useState({
@@ -14,6 +17,9 @@ export default function LoginPage() {
     password: '',
     confirmPassword: ''
   })
+  const [rememberMe, setRememberMe] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -47,7 +53,7 @@ export default function LoginPage() {
       const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login'
       const body = isRegister
         ? formData
-        : { email: formData.email, password: formData.password }
+        : { email: formData.email, password: formData.password, remember: rememberMe }
 
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -63,7 +69,7 @@ export default function LoginPage() {
 
       setSuccess(true)
       setTimeout(() => {
-        router.push('/')
+        router.push(isRegister ? '/' : redirectTo)
         router.refresh()
       }, 1000)
     } catch {
@@ -183,16 +189,46 @@ export default function LoginPage() {
                     <div className="relative">
                       <FaLock className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500 text-lg z-10" />
                       <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         placeholder="Enter your password"
                         required
                         minLength={isRegister ? 6 : undefined}
                         value={formData.password}
                         onChange={handleChange('password')}
-                        className="w-full h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 pl-14 pr-5 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
+                        className="w-full h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 pl-14 pr-12 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        className="absolute right-5 top-1/2 -translate-y-1/2 text-white/60 hover:text-gold-500 transition-colors z-10"
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      </button>
                     </div>
                   </div>
+
+                  {/* Remember me + Forgot password */}
+                  {!isRegister && (
+                    <div className="flex items-center justify-between mb-6 px-2">
+                      <label className="flex items-center gap-2 text-white/80 text-sm cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={rememberMe}
+                          onChange={(e) => setRememberMe(e.target.checked)}
+                          className="w-4 h-4 rounded accent-gold-500"
+                        />
+                        Remember me
+                      </label>
+
+                      <Link
+                        href="/account/forgot-password"
+                        className="text-gold-500 text-sm font-semibold hover:text-white"
+                      >
+                        Forgot password?
+                      </Link>
+                    </div>
+                  )}
 
                   {/* Confirm Password */}
                   {isRegister && (
@@ -200,14 +236,22 @@ export default function LoginPage() {
                       <div className="relative">
                         <FaLock className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500 text-lg z-10" />
                         <input
-                          type="password"
+                          type={showConfirmPassword ? 'text' : 'password'}
                           placeholder="Confirm Password"
                           required
                           minLength={6}
                           value={formData.confirmPassword}
                           onChange={handleChange('confirmPassword')}
-                          className="w-full h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 pl-14 pr-5 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
+                          className="w-full h-14 rounded-full bg-white/10 backdrop-blur-md border border-white/20 pl-14 pr-12 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
                         />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword((v) => !v)}
+                          aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                          className="absolute right-5 top-1/2 -translate-y-1/2 text-white/60 hover:text-gold-500 transition-colors z-10"
+                        >
+                          {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
                       </div>
                     </div>
                   )}
@@ -286,5 +330,13 @@ export default function LoginPage() {
       </div>
 
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageInner />
+    </Suspense>
   )
 }

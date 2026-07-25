@@ -8,7 +8,9 @@ import {
   FaEnvelope,
   FaLock,
   FaArrowRight,
-  FaCheckCircle
+  FaCheckCircle,
+  FaEye,
+  FaEyeSlash
 } from 'react-icons/fa'
 
 export default function RegisterPage() {
@@ -20,6 +22,8 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: ''
   })
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -138,27 +142,43 @@ export default function RegisterPage() {
                 <div className="mb-4 relative">
                   <FaLock className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500" />
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Password"
                     required
                     minLength={6}
                     value={formData.password}
                     onChange={handleChange('password')}
-                    className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-5 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
+                    className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-12 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    className="absolute right-5 top-1/2 -translate-y-1/2 text-white/60 hover:text-gold-500 transition-colors"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
 
                 <div className="mb-6 relative">
                   <FaLock className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500" />
                   <input
-                    type="password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     placeholder="Confirm Password"
                     required
                     minLength={6}
                     value={formData.confirmPassword}
                     onChange={handleChange('confirmPassword')}
-                    className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-5 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
+                    className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-12 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                    className="absolute right-5 top-1/2 -translate-y-1/2 text-white/60 hover:text-gold-500 transition-colors"
+                  >
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
 
                 {error && (

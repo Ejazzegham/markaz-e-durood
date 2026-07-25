@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { 
   FaUser, 
   FaHeart, 
@@ -22,13 +23,18 @@ import {
   FaSignOutAlt,
   FaCog,
   FaBell,
-  FaSearch
+  FaSearch,
+  FaHistory
 } from 'react-icons/fa'
 import { GiPrayer, GiBookCover } from 'react-icons/gi'
 import { MdDashboard, MdMenuBook } from 'react-icons/md'
 
 export default function Dashboard() {
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
+  const [me, setMe] = useState<{ name: string; email: string; role: string } | null>(null)
+  const [myHistory, setMyHistory] = useState<any[]>([])
+  const [myTotalCount, setMyTotalCount] = useState(0)
   const [stats, setStats] = useState({
     totalDurood: 0,
     totalResources: 0,
@@ -44,10 +50,21 @@ export default function Dashboard() {
 
   useEffect(() => {
     Promise.all([
+      fetch('/api/auth/me').then((r) => (r.ok ? r.json() : null)),
       fetch('/api/dashboard/summary').then((r) => r.json()),
       fetch('/api/durood/stats').then((r) => r.json()),
+      fetch('/api/dashboard/my-submissions').then((r) => (r.ok ? r.json() : null)),
     ])
-      .then(([summary, duroodStats]) => {
+      .then(([meData, summary, duroodStats, mySubs]) => {
+        // The page is also protected by middleware, but if the session
+        // cookie has expired client-side, bounce back to login instead of
+        // silently showing an empty dashboard.
+        if (!meData?.user) {
+          router.push('/account/login?from=/dashboard')
+          return
+        }
+        setMe(meData.user)
+
         setStats({
           totalDurood: summary.totalDurood || 0,
           totalResources: summary.totalResources || 0,
@@ -74,9 +91,14 @@ export default function Dashboard() {
             rank: i + 1,
           }))
         )
+
+        if (mySubs) {
+          setMyHistory(mySubs.submissions || [])
+          setMyTotalCount(mySubs.totalCount || 0)
+        }
       })
       .finally(() => setLoading(false))
-  }, [])
+  }, [router])
 
   if (loading) {
     return (
@@ -141,11 +163,11 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                    <span className="text-white">User</span>
-                    <span className="text-gold-500"> Dashboard</span>
+                    <span className="text-white">{me?.name ? me.name.split(' ')[0] : 'User'}</span>
+                    <span className="text-gold-500">'s Dashboard</span>
                   </h1>
                   <p className="text-gray-400 text-xs hidden sm:block">
-                    Welcome back! Here's your activity overview
+                    Welcome back{me?.name ? `, ${me.name}` : ''}! Here's your activity overview
                   </p>
                 </div>
               </div>
@@ -218,6 +240,71 @@ export default function Dashboard() {
                 <span className="text-gold-500 font-bold text-sm">{formatNumber(stats.contributorsThisWeek)}</span>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* ============================================
+            MY DUROOD HISTORY (personal, logged-in user only)
+            ============================================ */}
+        <div className="bg-green-850/80 border border-gold-500/20 rounded-xl overflow-hidden hover:border-gold-500/40 transition-all mb-8">
+          <div className="px-5 py-4 border-b border-gold-500/10 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FaHistory className="text-gold-500 text-sm" />
+              <h3 className="text-white font-semibold">My Durood History</h3>
+            </div>
+            <span className="text-xs text-gray-400">
+              Total submitted: <span className="text-gold-500 font-mono font-bold">{formatNumber(myTotalCount)}</span>
+            </span>
+          </div>
+          <div className="p-4">
+            {myHistory.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500 text-sm mb-4">You haven't submitted any Durood yet.</p>
+                <Link
+                  href="/account/submit-durood"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gold-500 hover:bg-gold-600 text-black text-sm font-bold transition-all"
+                >
+                  <GiPrayer /> Submit Durood
+                </Link>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="text-gray-500 text-[10px] uppercase tracking-wider">
+                      <th className="pb-2 font-semibold">Date</th>
+                      <th className="pb-2 font-semibold">Type</th>
+                      <th className="pb-2 font-semibold text-right">Count</th>
+                      <th className="pb-2 font-semibold text-right">Visibility</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {myHistory.map((sub) => (
+                      <tr key={sub.id} className="border-t border-gold-500/10">
+                        <td className="py-2.5 text-gray-300 text-xs">
+                          {new Date(sub.createdAt).toLocaleDateString(undefined, {
+                            year: 'numeric', month: 'short', day: 'numeric',
+                          })}
+                        </td>
+                        <td className="py-2.5 text-gray-300 text-xs">{sub.duroodType}</td>
+                        <td className="py-2.5 text-gold-500 font-mono text-sm text-right">
+                          {formatNumber(sub.duroodCount)}
+                        </td>
+                        <td className="py-2.5 text-right">
+                          <span className={`text-[10px] px-2 py-1 rounded-full ${
+                            sub.isAnonymous
+                              ? 'bg-gray-500/10 text-gray-400'
+                              : 'bg-green-500/10 text-green-400'
+                          }`}>
+                            {sub.isAnonymous ? 'Anonymous' : 'Public'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
 

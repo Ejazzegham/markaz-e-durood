@@ -40,16 +40,35 @@ export default function Navbar() {
   const [accountOpen, setAccountOpen] = useState(false)
   const [resourcesOpen, setResourcesOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null)
   const pathname = usePathname()
   const router = useRouter()
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
+    setUser(null)
     router.push('/')
     router.refresh()
   }
 
   const isActive = (href: string) => pathname === href
+
+  // Check login state once on mount, and again whenever the route changes
+  // (e.g. right after logging in/out) so the menu stays in sync.
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/auth/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!cancelled) setUser(data?.user || null)
+      })
+      .catch(() => {
+        if (!cancelled) setUser(null)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [pathname])
 
   // Add depth once the page is scrolled, so the bar doesn't feel like it's
   // floating flush against page content
@@ -180,30 +199,36 @@ export default function Navbar() {
                 {/* Account Dropdown */}
                 <div className="relative group">
                   <button className="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
-                    Account <FaCaretDown className="text-xs" />
+                    {user ? user.name.split(' ')[0] : 'Account'} <FaCaretDown className="text-xs" />
                   </button>
                   <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div className="bg-green-800/95 backdrop-blur-sm rounded-xl shadow-2xl py-2 w-48 border border-gold-500/20">
-                      <Link href="/account/login" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaSignInAlt className="text-green-400" /> Login
-                      </Link>
-                      <Link href="/account/register" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaUserPlus className="text-gold-400" /> Register
-                      </Link>
-                      <div className="border-t border-white/10 my-1"></div>
-                      <Link href="/account/submit-durood" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaHands className="text-red-400" /> Submit Durood
-                      </Link>
-                      <Link href="/account/donate" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaDonate className="text-red-400" /> Donate
-                      </Link>
-                      <div className="border-t border-white/10 my-1"></div>
-                      <Link href="/dashboard" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <MdDashboard className="text-blue-400" /> Dashboard
-                      </Link>
-                      <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm text-left">
-                        <FaUser className="text-red-400" /> Logout
-                      </button>
+                      {user ? (
+                        <>
+                          <Link href="/dashboard" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
+                            <MdDashboard className="text-blue-400" /> Dashboard
+                          </Link>
+                          <Link href="/account/submit-durood" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
+                            <FaHands className="text-red-400" /> Submit Durood
+                          </Link>
+                          <Link href="/account/donate" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
+                            <FaDonate className="text-red-400" /> Donate
+                          </Link>
+                          <div className="border-t border-white/10 my-1"></div>
+                          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm text-left">
+                            <FaUser className="text-red-400" /> Logout
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <Link href="/account/login" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
+                            <FaSignInAlt className="text-green-400" /> Login
+                          </Link>
+                          <Link href="/account/register" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
+                            <FaUserPlus className="text-gold-400" /> Register
+                          </Link>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -426,32 +451,40 @@ export default function Navbar() {
                   <div className="w-8 h-8 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                     <FaUser className="text-green-400 text-sm" />
                   </div>
-                  <span className="text-white text-sm font-medium flex-1 text-left">My Account</span>
+                  <span className="text-white text-sm font-medium flex-1 text-left">
+                    {user ? user.name.split(' ')[0] : 'My Account'}
+                  </span>
                   <FaCaretDown className={`text-white/50 text-xs transition-transform duration-300 ${accountOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 <div className={`overflow-hidden transition-all duration-300 ${accountOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                   <div className="ml-11 space-y-0.5 border-l-2 border-gold-500/20 pl-3 py-1">
-                    <Link href="/account/login" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
-                      <FaSignInAlt className="text-green-400 text-xs" /> Login
-                    </Link>
-                    <Link href="/account/register" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
-                      <FaUserPlus className="text-gold-400 text-xs" /> Register
-                    </Link>
-                    <div className="border-t border-white/10 my-1"></div>
-                    <Link href="/account/submit-durood" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
-                      <FaHands className="text-red-400 text-xs" /> Submit Durood
-                    </Link>
-                    <Link href="/account/donate" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
-                      <FaDonate className="text-red-400 text-xs" /> Donate
-                    </Link>
-                    <div className="border-t border-white/10 my-1"></div>
-                    <Link href="/dashboard" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
-                      <MdDashboard className="text-blue-400 text-xs" /> Dashboard
-                    </Link>
-                    <button onClick={() => { setIsOpen(false); handleLogout(); }} className="w-full flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors text-left">
-                      <FaUser className="text-red-400 text-xs" /> Logout
-                    </button>
+                    {user ? (
+                      <>
+                        <Link href="/dashboard" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
+                          <MdDashboard className="text-blue-400 text-xs" /> Dashboard
+                        </Link>
+                        <Link href="/account/submit-durood" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
+                          <FaHands className="text-red-400 text-xs" /> Submit Durood
+                        </Link>
+                        <Link href="/account/donate" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
+                          <FaDonate className="text-red-400 text-xs" /> Donate
+                        </Link>
+                        <div className="border-t border-white/10 my-1"></div>
+                        <button onClick={() => { setIsOpen(false); handleLogout(); }} className="w-full flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors text-left">
+                          <FaUser className="text-red-400 text-xs" /> Logout
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link href="/account/login" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
+                          <FaSignInAlt className="text-green-400 text-xs" /> Login
+                        </Link>
+                        <Link href="/account/register" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
+                          <FaUserPlus className="text-gold-400 text-xs" /> Register
+                        </Link>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

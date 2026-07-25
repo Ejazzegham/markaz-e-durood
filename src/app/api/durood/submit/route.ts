@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { Timestamp } from 'firebase-admin/firestore'
 import { getDb } from '@/lib/db/firestore'
+import { USER_COOKIE_NAME, verifyAdminToken } from '@/lib/auth/jwt'
 
 const submitSchema = z.object({
   userName: z.string().trim().min(1).max(60).optional(),
@@ -18,6 +19,19 @@ function getClientIp(request: NextRequest): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // Submitting Durood is now a member-only action — the page itself is
+    // gated by middleware, but we check again here so the API can't be
+    // called directly by a signed-out visitor.
+    const userToken = request.cookies.get(USER_COOKIE_NAME)?.value
+    const userPayload = userToken ? await verifyAdminToken(userToken) : null
+
+    if (!userPayload) {
+      return NextResponse.json(
+        { error: 'Please log in to submit Durood.' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
     const parsed = submitSchema.safeParse(body)
 
@@ -48,10 +62,14 @@ export async function POST(request: NextRequest) {
     }
 
     const isAnonymous = parsed.data.isAnonymous ?? !parsed.data.userName
-    const userName = isAnonymous ? 'Anonymous' : (parsed.data.userName as string)
+    // The display name respects "submit anonymously" for public listings,
+    // but we still tag every submission with the real userId below so the
+    // signed-in user can see their own full history in their dashboard.
+    const userName = isAnonymous ? 'Anonymous' : (parsed.data.userName as string) || userPayload.name
 
     const now = new Date()
     const data = {
+      userId: userPayload.userId,
       userName,
       duroodCount: parsed.data.duroodCount,
       duroodType: parsed.data.duroodType || 'General',

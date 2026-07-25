@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { FaHeart, FaUser, FaLock, FaCheckCircle,  FaArrowLeft, FaHands } from 'react-icons/fa'
 
@@ -9,6 +9,20 @@ export default function SubmitDurood() {
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+
+  // The page is gated to logged-in members, so prefill their name from the
+  // account they're signed in with (they can still tick "submit anonymously"
+  // if they don't want it shown publicly).
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.user?.name) {
+          setFormData((prev) => (prev.name ? prev : { ...prev, name: data.user.name }))
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
