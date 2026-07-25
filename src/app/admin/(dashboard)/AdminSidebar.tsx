@@ -78,7 +78,7 @@ export default function AdminSidebar({
         <p className="text-gray-500 text-xs">Admin Panel</p>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto scrollbar-hide">
         {navItems.map((item) => {
           const Icon = item.icon
           const active = isActive(item.href, item.exact)

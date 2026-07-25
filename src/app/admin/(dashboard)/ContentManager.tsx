@@ -157,6 +157,33 @@ export default function ContentManager({
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [editingItem, setEditingItem] = useState<Item | null>(null)
 
+  // For 'personSelect' fields (reciter/qari/performer): pull the real list
+  // of profiles so admins pick a name instead of retyping it, which is what
+  // used to cause videos to silently not show up on a profile page when the
+  // typed name didn't match the profile name exactly.
+  const personSelectField = fields.find((f) => f.type === 'personSelect')
+  const [personOptions, setPersonOptions] = useState<{ id: string; name: string }[]>([])
+  const [personOptionsLoading, setPersonOptionsLoading] = useState(false)
+
+  useEffect(() => {
+    const profileModel = personSelectField?.personSelectModel
+    if (!profileModel) return
+    let cancelled = false
+    setPersonOptionsLoading(true)
+    fetch(`/api/admin/content/${profileModel}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!cancelled) setPersonOptions(data.items || [])
+      })
+      .finally(() => {
+        if (!cancelled) setPersonOptionsLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [personSelectField?.personSelectModel])
+
   const loadItems = async () => {
     setLoading(true)
     try {
@@ -312,6 +339,36 @@ export default function ContentManager({
                   placeholder={field.placeholder}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-gold-500/50 transition-colors"
                 />
+              )}
+
+              {field.type === 'personSelect' && (
+                <>
+                  <select
+                    required={field.required}
+                    value={form[field.name] ?? ''}
+                    onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
+                    disabled={personOptionsLoading || personOptions.length === 0}
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-60"
+                  >
+                    <option value="" disabled className="text-gray-500">
+                      {personOptionsLoading
+                        ? 'Loading profiles...'
+                        : personOptions.length === 0
+                        ? 'No profiles found'
+                        : 'Select a profile...'}
+                    </option>
+                    {personOptions.map((p) => (
+                      <option key={p.id} value={p.name} className="text-black">
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                  {!personOptionsLoading && personOptions.length === 0 && (
+                    <p className="text-red-400 text-xs mt-1">
+                      No profiles yet — add one under &ldquo;{field.personSelectModel}&rdquo; profiles first, then come back here.
+                    </p>
+                  )}
+                </>
               )}
 
               {field.type === 'textarea' && (

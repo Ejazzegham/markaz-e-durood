@@ -2,6 +2,7 @@
 
 import AudioPlayer from '@/components/AudioPlayer'
 import TopSendersLeaderboard from '@/components/home/TopSendersLeaderboard'
+import NaatVideoSection from '@/components/home/NaatVideoSection'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { 
@@ -411,6 +412,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Naat Video Gallery — watch naat videos right on the homepage */}
+      <NaatVideoSection />
 
       {/* Stats Section - Full Width */}
       <section className="py-16 bg-green-900 text-white px-4">
