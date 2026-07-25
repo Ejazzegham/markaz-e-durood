@@ -1,7 +1,21 @@
 import { z } from 'zod'
 import { collection } from '@/lib/db/collection'
 
-export type AdminModelKey = 'books' | 'naat' | 'bayan' | 'gallery' | 'audio' | 'video' | 'blog' | 'faq' | 'news'
+export type AdminModelKey =
+  | 'books'
+  | 'naat'
+  | 'bayan'
+  | 'gallery'
+  | 'audio'
+  | 'video'
+  | 'blog'
+  | 'faq'
+  | 'news'
+  | 'naatKhawan'
+  | 'qari'
+  | 'naqabat'
+  | 'qariRecitation'
+  | 'naqabatVideo'
 
 export interface AdminFieldConfig {
   name: string
@@ -22,6 +36,10 @@ export interface AdminModelConfig {
   titleField: string
   subtitleField?: string
   imageField?: string
+  /** For "performance" content models (naat/qariRecitation/naqabatVideo): the
+   *  field that stores the performer's name, so the public API can filter a
+   *  person's page down to just their items (?person=Name). */
+  personField?: string
 }
 
 export const adminModels: Record<AdminModelKey, AdminModelConfig> = {
@@ -59,6 +77,7 @@ export const adminModels: Record<AdminModelKey, AdminModelConfig> = {
     delegate: collection('naats'),
     titleField: 'title',
     subtitleField: 'reciter',
+    personField: 'reciter',
     schema: z.object({
       title: z.string().min(1),
       reciter: z.string().min(1),
@@ -225,6 +244,116 @@ export const adminModels: Record<AdminModelKey, AdminModelConfig> = {
       { name: 'excerpt', label: 'Short Excerpt', type: 'textarea', helpText: 'Shown in article listings' },
       { name: 'content', label: 'Full Content', type: 'textarea', required: true },
       { name: 'isPublished', label: 'Publish now', type: 'checkbox' },
+    ],
+  },
+  naatKhawan: {
+    key: 'naatKhawan',
+    label: 'Naat Khawan',
+    singularLabel: 'Naat Khawan',
+    delegate: collection('naatKhawanProfiles'),
+    titleField: 'name',
+    imageField: 'photoUrl',
+    schema: z.object({
+      name: z.string().min(1),
+      photoUrl: z.string().min(1),
+      bio: z.string().optional().nullable(),
+      isFeatured: z.boolean().optional(),
+    }),
+    fields: [
+      { name: 'photoUrl', label: 'Photo', type: 'image', required: true, helpText: 'Upload a photo, or paste an image URL' },
+      { name: 'name', label: 'Name', type: 'text', required: true, placeholder: 'e.g. Sultan Fiaz-ul-Hassan' },
+      { name: 'bio', label: 'Short Bio', type: 'textarea', helpText: 'Optional — shown on their profile page' },
+      { name: 'isFeatured', label: 'Feature this Naat Khawan', type: 'checkbox' },
+    ],
+  },
+  qari: {
+    key: 'qari',
+    label: 'Qari-e-Quran',
+    singularLabel: 'Qari',
+    delegate: collection('qariProfiles'),
+    titleField: 'name',
+    imageField: 'photoUrl',
+    schema: z.object({
+      name: z.string().min(1),
+      photoUrl: z.string().min(1),
+      bio: z.string().optional().nullable(),
+      isFeatured: z.boolean().optional(),
+    }),
+    fields: [
+      { name: 'photoUrl', label: 'Photo', type: 'image', required: true, helpText: 'Upload a photo, or paste an image URL' },
+      { name: 'name', label: 'Name', type: 'text', required: true, placeholder: 'e.g. Qari Abdul Basit' },
+      { name: 'bio', label: 'Short Bio', type: 'textarea', helpText: 'Optional — shown on their profile page' },
+      { name: 'isFeatured', label: 'Feature this Qari', type: 'checkbox' },
+    ],
+  },
+  naqabat: {
+    key: 'naqabat',
+    label: 'Naqabat',
+    singularLabel: 'Naqabat Performer',
+    delegate: collection('naqabatProfiles'),
+    titleField: 'name',
+    imageField: 'photoUrl',
+    schema: z.object({
+      name: z.string().min(1),
+      photoUrl: z.string().min(1),
+      bio: z.string().optional().nullable(),
+      isFeatured: z.boolean().optional(),
+    }),
+    fields: [
+      { name: 'photoUrl', label: 'Photo', type: 'image', required: true, helpText: 'Upload a photo, or paste an image URL' },
+      { name: 'name', label: 'Name', type: 'text', required: true, placeholder: 'e.g. Naqeeb name' },
+      { name: 'bio', label: 'Short Bio', type: 'textarea', helpText: 'Optional — shown on their profile page' },
+      { name: 'isFeatured', label: 'Feature this performer', type: 'checkbox' },
+    ],
+  },
+  qariRecitation: {
+    key: 'qariRecitation',
+    label: 'Qari-e-Quran Recitations',
+    singularLabel: 'Recitation',
+    delegate: collection('qariRecitations'),
+    titleField: 'title',
+    subtitleField: 'qari',
+    personField: 'qari',
+    schema: z.object({
+      title: z.string().min(1),
+      qari: z.string().min(1),
+      description: z.string().optional().nullable(),
+      youtubeId: z.string().min(1),
+      category: z.string().optional(),
+      isFeatured: z.boolean().optional(),
+    }),
+    fields: [
+      { name: 'title', label: 'Title', type: 'text', required: true },
+      { name: 'qari', label: 'Qari Name', type: 'text', required: true, helpText: 'Must match the name used on their Qari-e-Quran profile' },
+      { name: 'youtubeId', label: 'YouTube Link or Video ID', type: 'youtube', required: true, placeholder: 'https://www.youtube.com/watch?v=...' },
+      { name: 'category', label: 'Category', type: 'text', placeholder: 'e.g. General' },
+      { name: 'description', label: 'Description', type: 'textarea' },
+      { name: 'isFeatured', label: 'Feature this recitation', type: 'checkbox' },
+    ],
+  },
+  naqabatVideo: {
+    key: 'naqabatVideo',
+    label: 'Naqabat Videos',
+    singularLabel: 'Naqabat Video',
+    delegate: collection('naqabatVideos'),
+    titleField: 'title',
+    subtitleField: 'performer',
+    personField: 'performer',
+    schema: z.object({
+      title: z.string().min(1),
+      performer: z.string().min(1),
+      description: z.string().optional().nullable(),
+      youtubeId: z.string().min(1),
+      category: z.string().optional(),
+      isFeatured: z.boolean().optional(),
+    }),
+    fields: [
+      { name: 'title', label: 'Title', type: 'text', required: true },
+      { name: 'performer', label: 'Performer Name', type: 'text', required: true, helpText: 'Must match the name used on their Naqabat profile' },
+      { name: 'youtubeId', label: 'YouTube Link or Video ID', type: 'youtube', required: true, placeholder: 'https://www.youtube.com/watch?v=...' },
+      { name: 'category', label: 'Category', type: 'text', placeholder: 'e.g. General' },
+      { name: 'description', label: 'Description', type: 'textarea' },
+      { name: 'isFeatured', label: 'Feature this video', type: 'checkbox' },
     ],
   },
   faq: {

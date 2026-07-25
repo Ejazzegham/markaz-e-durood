@@ -18,6 +18,9 @@ import {
   FaBars,
   FaTimes,
   FaExternalLinkAlt,
+  FaUserTie,
+  FaQuran,
+  FaBullhorn,
 } from 'react-icons/fa'
 
 const navItems = [
@@ -28,6 +31,19 @@ const navItems = [
   { href: '/admin/audio', label: 'Audio Library', icon: FaHeadphones },
   { href: '/admin/video', label: 'Video Library', icon: FaVideo },
   { href: '/admin/pictures', label: 'Pictures', icon: FaImages },
+]
+
+// Markaz-e-Naat: performer profiles (name + photo) and the performances
+// linked to them by matching name — shown as its own section in the sidebar.
+const naatCenterNavItems = [
+  { href: '/admin/naat-khawan', label: 'Naat Khawan (Profiles)', icon: FaUserTie },
+  { href: '/admin/qari', label: 'Qari-e-Quran (Profiles)', icon: FaQuran },
+  { href: '/admin/qari-recitation', label: 'Qari Recitations', icon: FaHeadphones },
+  { href: '/admin/naqabat', label: 'Naqabat (Profiles)', icon: FaBullhorn },
+  { href: '/admin/naqabat-videos', label: 'Naqabat Videos', icon: FaVideo },
+]
+
+const contentNavItems = [
   { href: '/admin/blog', label: 'Blog', icon: FaBlog },
   { href: '/admin/news', label: 'News', icon: FaNewspaper },
   { href: '/admin/faq', label: 'FAQ', icon: FaQuestionCircle },
@@ -62,10 +78,58 @@ export default function AdminSidebar({
         <p className="text-gray-500 text-xs">Admin Panel</p>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon
           const active = isActive(item.href, item.exact)
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                active
+                  ? 'bg-gold-500/15 text-gold-400'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Icon className="text-sm flex-shrink-0" />
+              {item.label}
+            </Link>
+          )
+        })}
+
+        <div className="flex items-center gap-2 px-3 pt-4 pb-1.5">
+          <span className="text-[10px] uppercase tracking-widest text-gray-600 font-semibold">Markaz-e-Naat</span>
+          <div className="flex-1 h-px bg-white/10"></div>
+        </div>
+        {naatCenterNavItems.map((item) => {
+          const Icon = item.icon
+          const active = isActive(item.href)
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                active
+                  ? 'bg-gold-500/15 text-gold-400'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Icon className="text-sm flex-shrink-0" />
+              {item.label}
+            </Link>
+          )
+        })}
+
+        <div className="flex items-center gap-2 px-3 pt-4 pb-1.5">
+          <span className="text-[10px] uppercase tracking-widest text-gray-600 font-semibold">Content</span>
+          <div className="flex-1 h-px bg-white/10"></div>
+        </div>
+        {contentNavItems.map((item) => {
+          const Icon = item.icon
+          const active = isActive(item.href)
           return (
             <Link
               key={item.href}

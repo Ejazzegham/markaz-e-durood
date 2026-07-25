@@ -141,9 +141,13 @@ export default function Navbar() {
                   Home
                 </Link>
                 
-                <a href="https://masjidehussain.com/" target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                <a href="https://masjidehussain.com/" target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-lg hover:bg-white/10 transition-all duration-300 text-sm font-medium whitespace-nowrap text-blue-400 hover:text-blue-300">
                   Masjid-e-Hussain
                 </a>
+
+                <Link href="/markaz-e-naat" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                  Markaz-e-Naat
+                </Link>
 
                 {/* Resources Dropdown - Clean Order */}
                 <div className="relative group">
@@ -184,7 +188,7 @@ export default function Navbar() {
                   Durood Count
                 </Link>
 
-                <Link href="/account/donate" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                <Link href="/account/donate" className="px-3 py-2 rounded-lg hover:bg-white/10 transition-all duration-300 text-sm font-semibold whitespace-nowrap text-gold-400 hover:text-gold-300">
                   Donate
                 </Link>
 
@@ -338,11 +342,24 @@ export default function Navbar() {
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 group hover:bg-white/10"
                 onClick={() => setIsOpen(false)}
               >
-                <div className="w-8 h-8 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                  <FaMosque className="text-green-400 text-sm" />
+                <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                  <FaMosque className="text-blue-400 text-sm" />
                 </div>
-                <span className="text-white text-sm font-medium">Masjid-e-Hussain</span>
+                <span className="text-blue-400 text-sm font-medium">Masjid-e-Hussain</span>
               </a>
+
+              <Link
+                href="/markaz-e-naat"
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 group ${
+                  isActive('/markaz-e-naat') ? 'bg-gold-500/10' : 'hover:bg-white/10'
+                }`}
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                  <FaMicrophone className="text-red-400 text-sm" />
+                </div>
+                <span className="text-white text-sm font-medium">Markaz-e-Naat</span>
+              </Link>
 
               {/* Resources - Collapsible */}
               <div>
@@ -410,7 +427,7 @@ export default function Navbar() {
                 <div className="w-8 h-8 rounded-lg bg-gold-500/10 border border-gold-500/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                   <FaDonate className="text-gold-400 text-sm" />
                 </div>
-                <span className="text-white text-sm font-medium">Donate</span>
+                <span className="text-gold-400 text-sm font-semibold">Donate</span>
               </Link>
 
               <Link

@@ -23,6 +23,13 @@ export async function GET(
       ? { isActive: true }
       : {}
 
+  // Lets a performer's page (Naat Khawan / Qari-e-Quran / Naqabat) pull just
+  // that person's items, e.g. /api/content/naat?person=Some+Name
+  const personParam = request.nextUrl.searchParams.get('person')
+  if (personParam && config.personField) {
+    where[config.personField] = personParam
+  }
+
   const items = await config.delegate.findMany({
     where,
     orderBy: { createdAt: 'desc' },
