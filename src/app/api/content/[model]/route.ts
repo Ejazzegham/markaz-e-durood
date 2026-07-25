@@ -4,6 +4,11 @@ import { adminModels, isValidModelKey } from '@/lib/admin/models'
 
 export const dynamic = 'force-dynamic'
 
+function normalizeName(value: unknown): string {
+  if (typeof value !== 'string') return ''
+  return value.trim().toLowerCase().replace(/\s+/g, ' ')
+}
+
 // Read-only, unauthenticated — this is what the public pages fetch from.
 // Only ever returns content that's meant to be public (published/active).
 export async function GET(
@@ -23,19 +28,30 @@ export async function GET(
       ? { isActive: true }
       : {}
 
-  // Lets a performer's page (Naat Khawan / Qari-e-Quran / Naqabat) pull just
-  // that person's items, e.g. /api/content/naat?person=Some+Name
-  const personParam = request.nextUrl.searchParams.get('person')
-  if (personParam && config.personField) {
-    where[config.personField] = personParam
-  }
-
   const items = await config.delegate.findMany({
     where,
     orderBy: { createdAt: 'desc' },
   })
 
-  return NextResponse.json({ items })
+  // Lets a performer's page (Naat Khawan / Qari-e-Quran / Naqabat) pull just
+  // that person's items, e.g. /api/content/naat?person=Some+Name
+  //
+  // This is matched in-memory (not as a Firestore `where` clause) and
+  // normalized — trimmed, case-insensitive, and collapsing extra spaces —
+  // because the admin panel and the profile page are two separate free-text
+  // entries of the same name. A Firestore `==` query is byte-exact, so
+  // something as small as "Qari Abdul Basit" vs "qari abdul basit " would
+  // silently return zero results even though a person would call them the
+  // same name.
+  const personParam = request.nextUrl.searchParams.get('person')
+  const filtered =
+    personParam && config.personField
+      ? items.filter(
+          (item) => normalizeName(item[config.personField!]) === normalizeName(personParam)
+        )
+      : items
+
+  return NextResponse.json({ items: filtered })
 }
 
 const publicFaqSubmissionSchema = z.object({

@@ -20,10 +20,14 @@ export type AdminModelKey =
 export interface AdminFieldConfig {
   name: string
   label: string
-  type: 'text' | 'textarea' | 'youtube' | 'image' | 'pdf' | 'checkbox'
+  type: 'text' | 'textarea' | 'youtube' | 'image' | 'pdf' | 'checkbox' | 'personSelect'
   required?: boolean
   placeholder?: string
   helpText?: string
+  /** For type: 'personSelect' — which profile model (e.g. 'naatKhawan') to
+   *  populate the dropdown from, so the name always matches a real profile
+   *  instead of relying on a free-text field being typed identically. */
+  personSelectModel?: AdminModelKey
 }
 
 export interface AdminModelConfig {
@@ -88,7 +92,7 @@ export const adminModels: Record<AdminModelKey, AdminModelConfig> = {
     }),
     fields: [
       { name: 'title', label: 'Title', type: 'text', required: true },
-      { name: 'reciter', label: 'Reciter', type: 'text', required: true },
+      { name: 'reciter', label: 'Reciter', type: 'personSelect', required: true, personSelectModel: 'naatKhawan', helpText: "Choose the reciter's Naat Khawan profile — this is how their videos show up on their profile page" },
       { name: 'youtubeId', label: 'YouTube Link or Video ID', type: 'youtube', required: true, placeholder: 'https://www.youtube.com/watch?v=...' },
       { name: 'category', label: 'Category', type: 'text', placeholder: 'e.g. General' },
       { name: 'description', label: 'Description', type: 'textarea' },
@@ -324,7 +328,7 @@ export const adminModels: Record<AdminModelKey, AdminModelConfig> = {
     }),
     fields: [
       { name: 'title', label: 'Title', type: 'text', required: true },
-      { name: 'qari', label: 'Qari Name', type: 'text', required: true, helpText: 'Must match the name used on their Qari-e-Quran profile' },
+      { name: 'qari', label: 'Qari Name', type: 'personSelect', required: true, personSelectModel: 'qari', helpText: "Choose the Qari's profile — this is how the recitation shows up on their profile page" },
       { name: 'youtubeId', label: 'YouTube Link or Video ID', type: 'youtube', required: true, placeholder: 'https://www.youtube.com/watch?v=...' },
       { name: 'category', label: 'Category', type: 'text', placeholder: 'e.g. General' },
       { name: 'description', label: 'Description', type: 'textarea' },
@@ -349,7 +353,7 @@ export const adminModels: Record<AdminModelKey, AdminModelConfig> = {
     }),
     fields: [
       { name: 'title', label: 'Title', type: 'text', required: true },
-      { name: 'performer', label: 'Performer Name', type: 'text', required: true, helpText: 'Must match the name used on their Naqabat profile' },
+      { name: 'performer', label: 'Performer Name', type: 'personSelect', required: true, personSelectModel: 'naqabat', helpText: 'Choose the performer\'s Naqabat profile — this is how the video shows up on their profile page' },
       { name: 'youtubeId', label: 'YouTube Link or Video ID', type: 'youtube', required: true, placeholder: 'https://www.youtube.com/watch?v=...' },
       { name: 'category', label: 'Category', type: 'text', placeholder: 'e.g. General' },
       { name: 'description', label: 'Description', type: 'textarea' },
