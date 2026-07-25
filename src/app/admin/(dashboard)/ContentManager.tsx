@@ -270,14 +270,14 @@ export default function ContentManager({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-white">{label}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-white truncate">{label}</h1>
           <p className="text-gray-500 text-sm">{items.length} {items.length === 1 ? singularLabel.toLowerCase() : label.toLowerCase()}</p>
         </div>
         <button
           onClick={handleStartAdd}
-          className="flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-ink-950 font-semibold text-sm px-4 py-2.5 rounded-lg transition-colors"
+          className="flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-ink-950 font-semibold text-sm px-4 py-2.5 rounded-lg transition-colors shrink-0"
         >
           {showForm && !editingItem ? <FaTimes /> : <FaPlus />}
           {showForm && !editingItem ? 'Cancel' : `Add ${singularLabel}`}
@@ -348,9 +348,9 @@ export default function ContentManager({
                     value={form[field.name] ?? ''}
                     onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
                     disabled={personOptionsLoading || personOptions.length === 0}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-60"
+                    className="admin-select w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-60"
                   >
-                    <option value="" disabled className="text-gray-500">
+                    <option value="" disabled>
                       {personOptionsLoading
                         ? 'Loading profiles...'
                         : personOptions.length === 0
@@ -358,7 +358,7 @@ export default function ContentManager({
                         : 'Select a profile...'}
                     </option>
                     {personOptions.map((p) => (
-                      <option key={p.id} value={p.name} className="text-black">
+                      <option key={p.id} value={p.name}>
                         {p.name}
                       </option>
                     ))}
@@ -369,6 +369,24 @@ export default function ContentManager({
                     </p>
                   )}
                 </>
+              )}
+
+              {field.type === 'select' && (
+                <select
+                  required={field.required}
+                  value={form[field.name] ?? ''}
+                  onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
+                  className="admin-select w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-500/50 transition-colors"
+                >
+                  <option value="" disabled>
+                    Select {field.label.toLowerCase()}...
+                  </option>
+                  {(field.options || []).map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
               )}
 
               {field.type === 'textarea' && (

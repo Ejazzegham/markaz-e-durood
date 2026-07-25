@@ -20,7 +20,7 @@ export type AdminModelKey =
 export interface AdminFieldConfig {
   name: string
   label: string
-  type: 'text' | 'textarea' | 'youtube' | 'image' | 'pdf' | 'checkbox' | 'personSelect'
+  type: 'text' | 'textarea' | 'youtube' | 'image' | 'pdf' | 'checkbox' | 'personSelect' | 'select'
   required?: boolean
   placeholder?: string
   helpText?: string
@@ -28,7 +28,23 @@ export interface AdminFieldConfig {
    *  populate the dropdown from, so the name always matches a real profile
    *  instead of relying on a free-text field being typed identically. */
   personSelectModel?: AdminModelKey
+  /** For type: 'select' — the fixed list of choices shown in the dropdown. */
+  options?: string[]
 }
+
+// Keeps every Naat's category consistent (and filterable) instead of relying
+// on admins retyping free text that can drift — "Manqabat" vs "Manqabt", etc.
+export const NAAT_CATEGORIES = [
+  'Naat',
+  'Manqabat',
+  'Qasida',
+  'Hamd',
+  'Munajat',
+  'Salam',
+  'Kalam',
+  'Milad',
+  'General',
+]
 
 export interface AdminModelConfig {
   key: AdminModelKey
@@ -94,7 +110,7 @@ export const adminModels: Record<AdminModelKey, AdminModelConfig> = {
       { name: 'title', label: 'Title', type: 'text', required: true },
       { name: 'reciter', label: 'Reciter', type: 'personSelect', required: true, personSelectModel: 'naatKhawan', helpText: "Choose the reciter's Naat Khawan profile — this is how their videos show up on their profile page" },
       { name: 'youtubeId', label: 'YouTube Link or Video ID', type: 'youtube', required: true, placeholder: 'https://www.youtube.com/watch?v=...' },
-      { name: 'category', label: 'Category', type: 'text', placeholder: 'e.g. General' },
+      { name: 'category', label: 'Category', type: 'select', options: NAAT_CATEGORIES, helpText: 'Choose the category this Naat belongs to' },
       { name: 'description', label: 'Description', type: 'textarea' },
       { name: 'isFeatured', label: 'Feature this naat', type: 'checkbox' },
     ],

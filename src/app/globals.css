@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap');
 
 /* ============================================
    DESIGN TOKENS (mirrors tailwind.config.js so
@@ -77,6 +78,22 @@ body::-webkit-scrollbar {
 .star {
   margin: 0 20px;
   color: var(--brand-gold);
+}
+
+/* ============================================
+   PROFESSIONAL URDU TYPOGRAPHY
+   Noto Nastaliq Urdu renders proper Nastaliq
+   ligatures/shaping — far more readable than
+   whatever fallback the browser/OS picks for
+   Urdu by default.
+   ============================================ */
+.font-urdu {
+  font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif;
+  direction: rtl;
+  line-height: 2.15;
+  letter-spacing: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 .divider {
@@ -217,6 +234,47 @@ input[type="range"]::-moz-range-thumb {
   background: var(--brand-gold);
   border: none;
   cursor: pointer;
+}
+
+/* ============================================
+   PROFESSIONAL SELECT / DROPDOWN
+   Strips the OS default arrow + styling so every
+   <select> (admin category pickers, profile
+   pickers, etc.) matches the site's dark/gold
+   theme instead of looking like a stock browser
+   control.
+   ============================================ */
+.admin-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 7.5l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 14px;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+.admin-select:disabled {
+  cursor: not-allowed;
+}
+/* Dropdown option list — Firefox/Chromium both respect this on <option> */
+.admin-select option {
+  background-color: #0e1a12;
+  color: #fff;
+}
+
+/* ============================================
+   LIKE BUTTON — small pop/burst on click
+   ============================================ */
+@keyframes likePop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.35); }
+  55% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+.like-pop {
+  animation: likePop 0.4s ease-out;
 }
 
 /* ============================================

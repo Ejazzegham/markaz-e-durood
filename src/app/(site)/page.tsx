@@ -2,7 +2,8 @@
 
 import AudioPlayer from '@/components/AudioPlayer'
 import TopSendersLeaderboard from '@/components/home/TopSendersLeaderboard'
-import NaatVideoSection from '@/components/home/NaatVideoSection'
+import MissionSection from '@/components/home/MissionSection'
+import GalleryHighlights from '@/components/home/GalleryHighlights'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { 
@@ -277,6 +278,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Our Mission — bilingual (English/Urdu) statement with founder photo */}
+      <MissionSection />
+
       {/* Top Durood Senders — Today / Weekly / Monthly leaderboard with chart */}
       <TopSendersLeaderboard />
 
@@ -413,8 +417,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Naat Video Gallery — watch naat videos right on the homepage */}
-      <NaatVideoSection />
+      {/* Picture Gallery — with like button + counter on each photo */}
+      <GalleryHighlights />
 
       {/* Stats Section - Full Width */}
       <section className="py-16 bg-green-900 text-white px-4">

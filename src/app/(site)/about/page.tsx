@@ -133,12 +133,12 @@ export default function About() {
               </p>
             </div>
 
-            {/* Arabic Text */}
-            <div className="bg-green-850/60 border border-gold-500/10 rounded-xl p-5 text-right">
-              <p className="text-lg text-gold-500 font-arabic leading-relaxed">
+            {/* Urdu Text — professional Nastaliq typography */}
+            <div className="bg-green-850/60 border border-gold-500/10 rounded-xl p-5 sm:p-6">
+              <p className="font-urdu text-lg sm:text-xl text-gold-400">
                 یہ ویب سائٹ پوری دنیا میں درود شریف اور اس کی برکات کو جمع کرنے اور اسے فروغ دینے کے لیے وقف ہے۔ درود شریف کے فوائد وڈیوز، لیکچرز، نعتوں، کتابوں اور مضامین کے ذریعے شیئر کیے جائیں گے۔ انشاء اللہ اس ویب سائٹ کو دیکھنے والے روحانی طور پر بلند ہو جائیں گے اور دوسروں کے ساتھ برکات بانٹنے کی ترغیب دی جاتی ہے۔
               </p>
-              <p className="text-gold-500 text-sm font-semibold mt-3">
+              <p className="font-urdu text-gold-500 font-bold text-base sm:text-lg mt-3 pt-3 border-t border-gold-500/10">
                 اس سفر میں ہمارے ساتھ شامل ہوں اور روزانہ 50 ملین سے زیادہ درود کے ہدف تک پہنچنے میں ہماری مدد کریں
               </p>
             </div>
@@ -184,10 +184,12 @@ export default function About() {
               <div className="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-gold-500/30 rounded-br-lg"></div>
             </div>
 
-            {/* Floating Badge */}
-            <div className="absolute -bottom-4 -right-4 bg-gold-500 text-green-950 px-4 py-2 rounded-xl shadow-xl flex items-center gap-2">
-              <FaHeart className="text-red-500 animate-pulse" />
-              <span className="font-bold text-sm">50M+ Target</span>
+            {/* Caption — sits below the image instead of overlapping it */}
+            <div className="mt-4 flex items-center justify-center gap-2 text-center">
+              <FaHeart className="text-gold-500/70 text-xs" />
+              <p className="text-gray-400 text-xs tracking-wide">
+                Indeed, Allah and His angels send blessings on the Prophet ﷺ
+              </p>
             </div>
           </div>
         </div>
@@ -202,10 +204,15 @@ export default function About() {
             { icon: <FaHeart />, num: '50M+', label: 'Daily Durood Target' },
             { icon: <FaHands />, num: '100%', label: 'Blessings Shared' }
           ].map((item, i) => (
-            <div key={i} className="bg-green-850/80 border border-gold-500/20 rounded-xl p-4 text-center hover:border-gold-500/40 transition-all hover:-translate-y-1">
-              <div className="text-gold-500 text-2xl flex justify-center mb-1">{item.icon}</div>
-              <div className="text-xl font-bold text-white">{item.num}</div>
-              <div className="text-gray-400 text-xs">{item.label}</div>
+            <div
+              key={i}
+              className="relative bg-gradient-to-b from-green-850/90 to-green-850/60 border border-gold-500/20 rounded-2xl p-5 text-center shadow-lg shadow-black/20 hover:border-gold-500/40 hover:shadow-gold-500/10 transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="w-11 h-11 mx-auto mb-2 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center text-gold-500 text-lg">
+                {item.icon}
+              </div>
+              <div className="text-2xl font-bold text-white">{item.num}</div>
+              <div className="text-gray-400 text-xs mt-0.5">{item.label}</div>
             </div>
           ))}
         </div>
