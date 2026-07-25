@@ -249,7 +249,7 @@ export default function Navbar() {
         ></div>
 
         <div 
-          className={`absolute right-0 top-0 h-full w-[82%] max-w-[300px] bg-gradient-to-b from-green-900 to-green-800 shadow-2xl transition-all duration-500 ease-out overflow-y-auto scrollbar-hide ${
+          className={`absolute right-0 top-0 h-full w-[72%] max-w-[280px] bg-gradient-to-b from-green-900 to-green-800 shadow-2xl transition-all duration-500 ease-out overflow-y-auto scrollbar-hide ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >

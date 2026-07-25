@@ -76,7 +76,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
         <SplashScreen>
           <Navbar />
-          <div className="pt-16 min-h-screen flex flex-col">
+          <div className="pt-20 min-h-screen flex flex-col">
             <main className="flex-grow">
               {children}
             </main>

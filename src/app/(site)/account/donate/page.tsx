@@ -31,15 +31,16 @@ export default function DonatePage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-green-875 flex items-center justify-center px-6 py-10">
+    <div className="min-h-[calc(100vh-80px)] bg-green-875 flex items-center justify-center px-4 py-8 sm:px-6 sm:py-10">
 
       <div
         className="
           relative
           w-full
           max-w-5xl
-          h-[650px]
-          rounded-[25px]
+          lg:h-[650px]
+          rounded-3xl
+          lg:rounded-[25px]
           overflow-hidden
           shadow-[0_25px_80px_rgba(0,0,0,0.45)]
         "
@@ -52,12 +53,12 @@ export default function DonatePage() {
         />
 
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-black/60 lg:bg-black/20" />
 
         {/* Content */}
-        <div className="relative z-10 h-full flex justify-end items-center">
+        <div className="relative z-10 flex items-center justify-center lg:justify-end px-5 py-10 sm:px-8 lg:px-0 lg:py-0 lg:h-full">
 
-          <div className="w-full max-w-[520px] mr-16">
+          <div className="w-full max-w-[420px] sm:max-w-[460px] lg:max-w-[520px] lg:mr-16">
 
             <Link
               href="/"
