@@ -2,7 +2,16 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { FaHeart, FaVideo, FaBookOpen, FaMicrophone, FaArrowRight } from 'react-icons/fa'
+import { FaHeart, FaArrowRight } from 'react-icons/fa'
+
+// Urdu translation broken into individual sentences so each one can get
+// its own thin divider underneath it — keeps the Nastaliq script from
+// ever feeling like one dense, run-together block of text.
+const urduLines = [
+  'یہ ویب سائٹ پوری دنیا میں درود شریف اور اس کی برکات کو جمع کرنے اور اسے فروغ دینے کے لیے وقف ہے۔',
+  'درود شریف کے فوائد وڈیوز، لیکچرز، نعتوں، کتابوں اور مضامین کے ذریعے شیئر کیے جائیں گے۔',
+  'انشاء اللہ اس ویب سائٹ کو دیکھنے والے روحانی طور پر بلند ہو جائیں گے اور دوسروں کے ساتھ برکات بانٹنے کی ترغیب دی جاتی ہے۔',
+]
 
 // Our Mission — bilingual (English + Urdu) statement paired with the
 // founder's photo. Sits right under the hero on the home page so a first-
@@ -23,41 +32,12 @@ export default function MissionSection() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-14 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-stretch">
           {/* ============================================
-              FOUNDER PHOTO
-              ============================================ */}
-          <div className="relative group mx-auto lg:mx-0 w-full max-w-sm">
-            <div className="absolute -inset-6 bg-gold-500/10 rounded-[2rem] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-            <div className="relative rounded-[1.75rem] overflow-hidden border-2 border-gold-500/25 group-hover:border-gold-500/50 transition-all duration-500 shadow-2xl shadow-black/40">
-              <Image
-                src="/mission/sultan-fiaz-ul-hassan.png"
-                alt="Sultan Fiaz-ul-Hassan Qadri"
-                width={700}
-                height={764}
-                className="w-full h-auto object-cover"
-                priority={false}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-green-950/70 via-transparent to-transparent" />
-
-              {/* Corner accents */}
-              <div className="absolute top-3 left-3 w-8 h-8 border-t-2 border-l-2 border-gold-500/40 rounded-tl-lg" />
-              <div className="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-gold-500/40 rounded-br-lg" />
-            </div>
-
-            {/* Name plate */}
-            <div className="mt-4 text-center">
-              <p className="text-white font-semibold text-sm">Sultan Fiaz-ul-Hassan Qadri</p>
-              <p className="text-gold-500/80 text-xs tracking-wide">Founder, Markaz-e-Durood</p>
-            </div>
-          </div>
-
-          {/* ============================================
-              MISSION TEXT — English + Urdu
+              MISSION TEXT — English + Urdu (now on the left)
               ============================================ */}
           <div className="space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight text-center lg:text-left">
+            <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight text-center">
               Spreading the Blessings of{' '}
               <span className="text-gold-500">Durood Shareef</span>
             </h2>
@@ -79,40 +59,32 @@ export default function MissionSection() {
             </div>
 
             {/* Urdu block — professional Nastaliq font, right-aligned RTL,
-                with a labeled callout treatment matching the site's premium look */}
+                each sentence on its own line with a thin divider beneath it
+                so lines never feel like they're touching */}
             <div className="relative bg-green-850/60 border border-gold-500/15 border-r-4 border-r-gold-500/60 rounded-2xl p-5 sm:p-6 pt-4">
-              <span className="font-urdu inline-block text-gold-500/90 text-xs font-bold tracking-wide bg-gold-500/10 border border-gold-500/20 rounded-full px-3 py-1 mb-3">
+              <span className="font-urdu inline-block text-gold-500/90 text-xs font-bold tracking-wide bg-gold-500/10 border border-gold-500/20 rounded-full px-3 py-1 mb-4">
                 اردو ترجمہ
               </span>
-              <p dir="rtl" className="font-urdu text-gold-400 text-xl sm:text-2xl">
-                یہ ویب سائٹ پوری دنیا میں درود شریف اور اس کی برکات کو جمع کرنے اور اسے
-                فروغ دینے کے لیے وقف ہے۔ درود شریف کے فوائد وڈیوز، لیکچرز، نعتوں، کتابوں
-                اور مضامین کے ذریعے شیئر کیے جائیں گے۔ انشاء اللہ اس ویب سائٹ کو دیکھنے
-                والے روحانی طور پر بلند ہو جائیں گے اور دوسروں کے ساتھ برکات بانٹنے کی
-                ترغیب دی جاتی ہے۔
-              </p>
-              <p dir="rtl" className="font-urdu text-gold-500 font-bold text-lg sm:text-xl mt-3 pt-3 border-t border-gold-500/10">
+
+              {urduLines.map((line, i) => (
+                <p
+                  key={i}
+                  dir="rtl"
+                  className="font-urdu text-white text-xl sm:text-2xl pb-4 mb-4 border-b border-white/15"
+                  style={{ lineHeight: 2.4 }}
+                >
+                  {line}
+                </p>
+              ))}
+
+              <p
+                dir="rtl"
+                className="font-urdu text-gold-400 font-bold text-lg sm:text-xl pt-1"
+                style={{ lineHeight: 2.2 }}
+              >
                 اس سفر میں ہمارے ساتھ شامل ہوں اور روزانہ 50 ملین سے زیادہ درود کے ہدف
                 تک پہنچنے میں ہماری مدد کریں
               </p>
-            </div>
-
-            {/* Quick highlights */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[
-                { icon: <FaBookOpen />, label: 'Books & Articles' },
-                { icon: <FaVideo />, label: 'Videos & Lectures' },
-                { icon: <FaMicrophone />, label: 'Naats & Bayan' },
-                { icon: <FaHeart />, label: 'Daily Durood' },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-2 bg-green-850/60 border border-gold-500/10 rounded-lg px-3 py-2.5"
-                >
-                  <span className="text-gold-500">{item.icon}</span>
-                  <span className="text-gray-300 text-xs">{item.label}</span>
-                </div>
-              ))}
             </div>
 
             <div className="flex justify-center lg:justify-start">
@@ -123,6 +95,37 @@ export default function MissionSection() {
                 Learn More About Us
                 <FaArrowRight className="text-xs" />
               </Link>
+            </div>
+          </div>
+
+          {/* ============================================
+              FOUNDER PHOTO (now on the right) — stretches to
+              match the full height of the text column so the
+              two sides read as the same visual size
+              ============================================ */}
+          <div className="relative group w-full h-[420px] sm:h-[480px] lg:h-auto flex flex-col">
+            <div className="absolute -inset-6 bg-gold-500/10 rounded-[2rem] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+            <div className="relative flex-1 min-h-0 rounded-[1.75rem] overflow-hidden border-2 border-gold-500/25 group-hover:border-gold-500/50 transition-all duration-500 shadow-2xl shadow-black/40">
+              <Image
+                src="/mission/sultan-fiaz-ul-hassan.png"
+                alt="Sultan Fiaz-ul-Hassan Qadri"
+                fill
+                sizes="(max-width: 1024px) 100vw, 45vw"
+                className="object-cover"
+                priority={false}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-green-950/70 via-transparent to-transparent" />
+
+              {/* Corner accents */}
+              <div className="absolute top-3 left-3 w-8 h-8 border-t-2 border-l-2 border-gold-500/40 rounded-tl-lg" />
+              <div className="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-gold-500/40 rounded-br-lg" />
+            </div>
+
+            {/* Name plate */}
+            <div className="mt-4 text-center shrink-0">
+              <p className="text-white font-semibold text-sm">Sultan Fiaz-ul-Hassan Qadri</p>
+              <p className="text-gold-500/80 text-xs tracking-wide">Founder, Markaz-e-Durood</p>
             </div>
           </div>
         </div>
