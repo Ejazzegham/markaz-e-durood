@@ -1,4 +1,5 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 // Cloudflare R2 speaks the S3 API, so the standard AWS SDK works against it —
 // you just point `endpoint` at your R2 account instead of AWS.
@@ -39,6 +40,27 @@ function getPublicBaseUrl(): string {
   const base = process.env.R2_PUBLIC_URL
   if (!base) throw new Error('Missing R2_PUBLIC_URL in your .env file.')
   return base.replace(/\/$/, '')
+}
+
+// Generates a short-lived, signed URL the browser can PUT a file to directly.
+// This is what lets large files (PDFs up to 50MB) get uploaded straight to
+// R2 without passing through — and hitting the body-size limit of — a
+// Vercel serverless function.
+export async function getPresignedUploadUrl(
+  key: string,
+  contentType: string,
+  expiresInSeconds = 300
+): Promise<string> {
+  const command = new PutObjectCommand({
+    Bucket: getBucket(),
+    Key: key,
+    ContentType: contentType,
+  })
+  return getSignedUrl(getClient(), command, { expiresIn: expiresInSeconds })
+}
+
+export function publicUrlForKey(key: string): string {
+  return `${getPublicBaseUrl()}/${key}`
 }
 
 export async function uploadToR2(

@@ -5,7 +5,7 @@ import { SignJWT, jwtVerify } from 'jose'
 // that aren't available in the Edge runtime that middleware.ts runs on).
 
 const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET="e3af7724c917aa810d8b4966c2a97ca63f6320500f4a1f62f00a37cf39210a88"
+  process.env.JWT_SECRET || 'markaz-e-durood-dev-secret-change-me'
 )
 
 export interface AdminTokenPayload {

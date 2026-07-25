@@ -64,17 +64,36 @@ function UploadField({
     setUploading(true)
     setError('')
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('folder', folder)
-      formData.append('kind', kind)
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: formData })
-      const data = await res.json()
-      if (!res.ok) {
-        setError(data.error || 'Upload failed')
+      const presignRes = await fetch('/api/admin/upload/presign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          filename: file.name,
+          contentType: file.type,
+          size: file.size,
+          folder,
+          kind,
+        }),
+      })
+      const presignData = await presignRes.json()
+      if (!presignRes.ok) {
+        setError(presignData.error || 'Upload failed')
         return
       }
-      onChange(data.url)
+
+      // Upload the file straight to R2 from the browser — this bypasses
+      // Vercel's serverless function body-size limit entirely.
+      const putRes = await fetch(presignData.uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': file.type },
+        body: file,
+      })
+      if (!putRes.ok) {
+        setError('Upload failed. Please try again.')
+        return
+      }
+
+      onChange(presignData.publicUrl)
     } catch {
       setError('Upload failed. Please try again.')
     } finally {
