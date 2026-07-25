@@ -1,0 +1,256 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { FaHeart, FaUser, FaLock, FaCheckCircle,  FaArrowLeft, FaHands } from 'react-icons/fa'
+
+export default function SubmitDurood() {
+  const [formData, setFormData] = useState({ name: '', count: '', anonymous: false })
+  const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+
+    const count = parseInt(formData.count, 10)
+    if (!count || count < 1) {
+      setError('Please enter a valid number of Durood.')
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      const res = await fetch('/api/durood/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userName: formData.anonymous ? undefined : formData.name || undefined,
+          duroodCount: count,
+          isAnonymous: formData.anonymous,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || 'Could not submit. Please try again.')
+        return
+      }
+      setFormData({ name: '', count: '', anonymous: false })
+      setSubmitted(true)
+      setTimeout(() => setSubmitted(false), 3000)
+    } catch {
+      setError('Could not submit. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+return (
+  <div className="min-h-[calc(100vh-64px)] bg-green-875 flex items-center justify-center px-6 py-10">
+
+    <div
+      className="
+        relative
+        w-full
+        max-w-5xl
+        h-[600px]
+        rounded-[25px]
+        overflow-hidden
+        shadow-[0_25px_80px_rgba(0,0,0,0.45)]
+      "
+    >
+      {/* Background */}
+      <img
+        src="/login-bg.jpg"
+        alt="Submit Durood"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+
+      <div className="absolute inset-0 bg-black/10" />
+
+      <div className="relative z-10 h-full flex justify-end items-center">
+
+        <div className="w-full max-w-[520px] mr-16">
+
+           <Link
+                         href="/"
+                         className="inline-flex items-center gap-2 text-gold-500 hover:text-white mb-6"
+                       >
+                         <FaArrowLeft />
+                         Back
+                       </Link>
+
+          <h1 className="text-white text-4xl md:text-5xl font-bold mb-3">
+            Submit Durood
+          </h1>
+
+          <p className="text-white/80 mb-8">
+            Share your blessings with the world
+          </p>
+
+          {submitted ? (
+            <div className="text-center py-10">
+
+              <FaCheckCircle className="text-6xl text-gold-500 mx-auto mb-4" />
+
+              <h2 className="text-3xl font-bold text-white mb-3">
+                Thank You!
+              </h2>
+
+              <p className="text-white/80">
+                Your Durood has been submitted successfully.
+              </p>
+
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+
+              {/* Name */}
+<div className="mb-5">
+  <div className="relative">
+    <FaUser
+      size={18}
+      className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500 z-20 pointer-events-none"
+    />
+
+    <input
+      type="text"
+      value={formData.name}
+      onChange={(e) =>
+        setFormData({
+          ...formData,
+          name: e.target.value,
+        })
+      }
+      placeholder="Your Name"
+      required
+      className="
+        w-full
+        h-14
+        rounded-full
+        bg-white/10
+        backdrop-blur-md
+        border border-white/20
+        pl-14
+        pr-5
+        text-white
+        placeholder-white/60
+        focus:outline-none
+        focus:border-gold-500
+      "
+    />
+  </div>
+</div>
+
+{/* Count */}
+<div className="mb-5">
+  <div className="relative">
+    <FaHands
+      size={18}
+      className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500 z-20 pointer-events-none"
+    />
+
+    <input
+      type="number"
+      value={formData.count}
+      onChange={(e) =>
+        setFormData({
+          ...formData,
+          count: e.target.value,
+        })
+      }
+      placeholder="Number of Durood"
+      min="1"
+      required
+      className="
+        w-full
+        h-14
+        rounded-full
+        bg-white/10
+        backdrop-blur-md
+        border border-white/20
+        pl-14
+        pr-5
+        text-white
+        placeholder-white/60
+        focus:outline-none
+        focus:border-gold-500
+      "
+    />
+  </div>
+</div>
+
+              {/* Anonymous */}
+              <div
+                className="
+                  flex
+                  items-center
+                  gap-3
+                  mb-6
+                  bg-white/10
+                  backdrop-blur-md
+                  border
+                  border-white/20
+                  rounded-full
+                  px-6
+                  py-4
+                "
+              >
+                <input
+                  type="checkbox"
+                  checked={formData.anonymous}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      anonymous: e.target.checked
+                    })
+                  }
+                  className="w-5 h-5"
+                />
+
+                <label className="text-white flex items-center gap-2">
+                  <FaLock className="text-gold-500" />
+                  Submit anonymously
+                </label>
+              </div>
+
+              {error && (
+                <p className="text-red-300 bg-red-500/10 border border-red-500/30 rounded-full px-5 py-2.5 text-sm mb-5 text-center">
+                  {error}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="
+                  w-full
+                  h-14
+                  rounded-full
+                  bg-gold-500
+                  hover:bg-gold-600
+                  disabled:opacity-60
+                  disabled:cursor-not-allowed
+                  text-black
+                  font-bold
+                  flex
+                  items-center
+                  justify-center
+                  gap-2
+                  transition-all
+                "
+              >
+                <FaHeart />
+                {submitting ? 'Submitting...' : 'Submit Durood'}
+              </button>
+
+            </form>
+          )}
+        </div>
+
+      </div>
+    </div>
+  </div>
+)
+}

@@ -1,0 +1,9 @@
+node_modules/ 
+.next/ 
+.env 
+.env.local 
+.vercel/ 
+
+# Uploaded content (admin panel) — keep folders, ignore actual files
+public/uploads/**/*
+!public/uploads/**/.gitkeep

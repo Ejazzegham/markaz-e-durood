@@ -1,0 +1,35 @@
+import { SignJWT, jwtVerify } from 'jose'
+
+// Runs in both the Node.js API routes and the Edge middleware, so we use
+// `jose` here rather than the `jsonwebtoken` package (which needs Node APIs
+// that aren't available in the Edge runtime that middleware.ts runs on).
+
+const secret = new TextEncoder().encode(
+  process.env.JWT_SECRET="e3af7724c917aa810d8b4966c2a97ca63f6320500f4a1f62f00a37cf39210a88"
+)
+
+export interface AdminTokenPayload {
+  userId: string
+  email: string
+  name: string
+  role: 'USER' | 'ADMIN' | 'SUPER_ADMIN'
+}
+
+export async function signAdminToken(payload: AdminTokenPayload): Promise<string> {
+  return new SignJWT({ ...payload })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('7d')
+    .sign(secret)
+}
+
+export async function verifyAdminToken(token: string): Promise<AdminTokenPayload | null> {
+  try {
+    const { payload } = await jwtVerify(token, secret)
+    return payload as unknown as AdminTokenPayload
+  } catch {
+    return null
+  }
+}
+
+export const ADMIN_COOKIE_NAME = 'med_admin_token'
