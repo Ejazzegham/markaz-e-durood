@@ -44,8 +44,8 @@ export default function Navbar() {
   const router = useRouter()
 
   const handleLogout = async () => {
-    await fetch('/api/admin/logout', { method: 'POST' })
-    router.push('/admin/login')
+    await fetch('/api/auth/logout', { method: 'POST' })
+    router.push('/')
     router.refresh()
   }
 

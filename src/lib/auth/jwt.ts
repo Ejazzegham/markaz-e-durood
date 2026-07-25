@@ -33,3 +33,7 @@ export async function verifyAdminToken(token: string): Promise<AdminTokenPayload
 }
 
 export const ADMIN_COOKIE_NAME = 'med_admin_token'
+
+// Separate cookie for regular site visitors (role USER) so a public login
+// never overlaps with an admin session in the same browser.
+export const USER_COOKIE_NAME = 'med_user_token'

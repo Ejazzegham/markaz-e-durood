@@ -1,24 +1,70 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   FaUser,
   FaEnvelope,
   FaLock,
-  FaArrowRight
+  FaArrowRight,
+  FaCheckCircle
 } from 'react-icons/fa'
 
 export default function RegisterPage() {
+  const router = useRouter()
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: ''
   })
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (field: keyof typeof formData) =>
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      setFormData((prev) => ({ ...prev, [field]: e.target.value }))
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError('')
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match.')
+      return
+    }
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters.')
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Could not create your account. Please try again.')
+        return
+      }
+
+      setSuccess(true)
+      setTimeout(() => {
+        router.push('/')
+        router.refresh()
+      }, 1200)
+    } catch {
+      setError('Could not create your account. Please check your connection and try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -56,78 +102,112 @@ export default function RegisterPage() {
               Join Markaz-e-Durood Community
             </p>
 
-            <form onSubmit={handleSubmit}>
-
-              <div className="mb-4 relative">
-                <FaUser className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500" />
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-5 text-white"
-                />
+            {success ? (
+              <div className="text-center py-10">
+                <FaCheckCircle className="text-6xl text-gold-500 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-white mb-2">Account Created!</h2>
+                <p className="text-white/80">Taking you to the homepage...</p>
               </div>
+            ) : (
+              <form onSubmit={handleSubmit}>
 
-              <div className="mb-4 relative">
-                <FaEnvelope className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500" />
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-5 text-white"
-                />
+                <div className="mb-4 relative">
+                  <FaUser className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500" />
+                  <input
+                    type="text"
+                    placeholder="Full Name"
+                    required
+                    value={formData.name}
+                    onChange={handleChange('name')}
+                    className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-5 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
+                  />
+                </div>
+
+                <div className="mb-4 relative">
+                  <FaEnvelope className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500" />
+                  <input
+                    type="email"
+                    placeholder="Email Address"
+                    required
+                    value={formData.email}
+                    onChange={handleChange('email')}
+                    className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-5 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
+                  />
+                </div>
+
+                <div className="mb-4 relative">
+                  <FaLock className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500" />
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    required
+                    minLength={6}
+                    value={formData.password}
+                    onChange={handleChange('password')}
+                    className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-5 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
+                  />
+                </div>
+
+                <div className="mb-6 relative">
+                  <FaLock className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500" />
+                  <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    required
+                    minLength={6}
+                    value={formData.confirmPassword}
+                    onChange={handleChange('confirmPassword')}
+                    className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-5 text-white placeholder-white/60 focus:outline-none focus:border-gold-500"
+                  />
+                </div>
+
+                {error && (
+                  <p className="text-red-300 bg-red-500/10 border border-red-500/30 rounded-full px-5 py-2.5 text-sm mb-5 text-center">
+                    {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="
+                    w-full
+                    h-14
+                    rounded-full
+                    bg-gold-500
+                    hover:bg-gold-600
+                    disabled:opacity-60
+                    disabled:cursor-not-allowed
+                    text-black
+                    font-bold
+                    flex
+                    items-center
+                    justify-center
+                    gap-2
+                    transition-all
+                  "
+                >
+                  {submitting ? 'Creating Account...' : 'Create Account'}
+                  {!submitting && <FaArrowRight />}
+                </button>
+
+              </form>
+            )}
+
+            {!success && (
+              <div className="text-center mt-8">
+                <p className="text-white/80">
+                  Already have an account?
+                </p>
+
+                <Link
+                  href="/account/login"
+                  className="text-gold-500 font-semibold"
+                >
+                  Login Now
+                </Link>
               </div>
-
-              <div className="mb-4 relative">
-                <FaLock className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500" />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-5 text-white"
-                />
-              </div>
-
-              <div className="mb-6 relative">
-                <FaLock className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500" />
-                <input
-                  type="password"
-                  placeholder="Confirm Password"
-                  className="w-full h-14 rounded-full bg-white/10 border border-white/20 pl-14 pr-5 text-white"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="
-                  w-full
-                  h-14
-                  rounded-full
-                  bg-gold-500
-                  hover:bg-gold-600
-                  text-black
-                  font-bold
-                  flex
-                  items-center
-                  justify-center
-                  gap-2
-                "
-              >
-                Create Account
-                <FaArrowRight />
-              </button>
-
-            </form>
-
-            <div className="text-center mt-8">
-              <p className="text-white/80">
-                Already have an account?
-              </p>
-
-              <Link
-                href="/account/login"
-                className="text-gold-500 font-semibold"
-              >
-                Login Now
-              </Link>
-            </div>
+            )}
 
           </div>
 
