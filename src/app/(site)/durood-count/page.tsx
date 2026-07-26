@@ -35,6 +35,7 @@ import {
   FaEllipsisH
 } from 'react-icons/fa'
 import { DUROOD_CATEGORIES, DUROOD_CATEGORY_OTHER } from '@/constants/duroodCategories'
+import PremiumSelect from '@/components/ui/PremiumSelect'
 
 const CATEGORY_COLORS = ['#D4AF37', '#8BC34A', '#4FD1C5', '#F6C453']
 
@@ -223,16 +224,14 @@ export default function DuroodCount() {
                 <label className="text-gray-400 text-xs flex items-center gap-1.5 mb-1.5">
                   <FaListUl className="text-gold-500/70 text-[10px]" /> Category
                 </label>
-                <select
+                <PremiumSelect
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="premium-select w-full px-3 py-2.5 bg-green-950 border border-gold-500/20 rounded-lg focus:border-gold-500 outline-none text-white text-sm transition"
-                >
-                  {DUROOD_CATEGORIES.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                  <option value={DUROOD_CATEGORY_OTHER}>{DUROOD_CATEGORY_OTHER} (specify below)</option>
-                </select>
+                  onChange={setCategory}
+                  options={[
+                    ...DUROOD_CATEGORIES.map((c) => ({ value: c, label: c })),
+                    { value: DUROOD_CATEGORY_OTHER, label: `${DUROOD_CATEGORY_OTHER} (specify below)` },
+                  ]}
+                />
                 {category === DUROOD_CATEGORY_OTHER && (
                   <input
                     type="text"

@@ -7,6 +7,7 @@ import {
   FaBars, 
   FaTimes, 
   FaCaretDown, 
+  FaAngleRight,
   FaHeadphones,
   FaVideo,
   FaFilePdf,
@@ -34,6 +35,56 @@ import {
 import { FaSquareXTwitter } from 'react-icons/fa6'
 import { GiBookCover } from 'react-icons/gi'
 import { MdMenuBook, MdDashboard } from 'react-icons/md'
+import type { ReactNode } from 'react'
+
+// A single row inside a premium nav dropdown: icon in a soft colour chip,
+// label, and a slim arrow that slides in on hover. `iconWrapClass` must be
+// a complete, static Tailwind class string (not built with template-string
+// interpolation) so the JIT compiler can see and generate it.
+function DropdownLink({
+  href,
+  icon,
+  iconWrapClass,
+  label,
+  external = false,
+}: {
+  href: string
+  icon: ReactNode
+  iconWrapClass: string
+  label: string
+  external?: boolean
+}) {
+  const rowClass =
+    'group/item relative flex items-center gap-3 mx-2 px-3 py-2.5 rounded-lg hover:bg-white/[0.06] transition-colors duration-200'
+
+  const inner = (
+    <>
+      <div
+        className={`w-8 h-8 rounded-lg border flex items-center justify-center flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200 ${iconWrapClass}`}
+      >
+        {icon}
+      </div>
+      <span className="flex-1 text-sm font-medium text-gray-200 group-hover/item:text-gold-400 transition-colors duration-200">
+        {label}
+      </span>
+      <FaAngleRight className="text-[10px] text-gold-500/0 -translate-x-1 group-hover/item:text-gold-500/70 group-hover/item:translate-x-0 transition-all duration-200" />
+    </>
+  )
+
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={rowClass}>
+        {inner}
+      </a>
+    )
+  }
+
+  return (
+    <Link href={href} className={rowClass}>
+      {inner}
+    </Link>
+  )
+}
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -149,37 +200,40 @@ export default function Navbar() {
                   Markaz-e-Naat
                 </Link>
 
-                {/* Resources Dropdown - Clean Order */}
+                {/* Resources Dropdown — premium panel */}
                 <div className="relative group">
                   <button className="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
-                    Resources <FaCaretDown className="text-xs" />
+                    Resources
+                    <FaCaretDown className="text-xs transition-transform duration-300 group-hover:rotate-180" />
                   </button>
-                  <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                    <div className="bg-green-800/95 backdrop-blur-sm rounded-xl shadow-2xl py-2 w-56 border border-gold-500/20">
-                      <Link href="/resources/naat" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaMicrophone className="text-red-400" /> Naat Shareef
-                      </Link>
-                      <Link href="/resources/audio" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaHeadphones className="text-green-400" /> Audio Library
-                      </Link>
-                      <Link href="/resources/books" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <GiBookCover className="text-gold-400" /> Books & PDFs
-                      </Link>
-                      <Link href="/resources/bayan" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaVideo className="text-purple-400" /> Bayan
-                      </Link>
-                      <Link href="/resources/videos" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaVideo className="text-red-400" /> Video Library
-                      </Link>
-                      <Link href="/gallery" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaImages className="text-pink-400" /> Gallery
-                      </Link>
-                      <Link href="/blog" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaBlog className="text-blue-400" /> Articles & Insights
-                      </Link>
-                      <Link href="/resources/ask" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/10 transition-colors text-sm">
-                        <FaQuestionCircle className="text-orange-400" /> Ask & Learn
-                      </Link>
+
+                  <div className="absolute left-0 top-full pt-3 opacity-0 invisible translate-y-1 scale-95 origin-top-left group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 transition-all duration-300 ease-out z-50">
+                    {/* Pointer caret connecting the panel to the trigger */}
+                    <div className="absolute top-[7px] left-7 w-3 h-3 bg-green-800 border-t border-l border-gold-500/25 rotate-45 z-0"></div>
+
+                    <div className="relative z-10 w-64 bg-gradient-to-b from-green-800/98 to-green-900/98 backdrop-blur-xl rounded-2xl border border-gold-500/20 shadow-2xl shadow-black/50 overflow-hidden">
+                      {/* Top accent */}
+                      <div className="h-[3px] bg-gradient-to-r from-transparent via-gold-500 to-transparent"></div>
+
+                      {/* Header */}
+                      <div className="flex items-center gap-2 px-4 pt-3 pb-2">
+                        <div className="w-6 h-6 rounded-md bg-gold-500/10 border border-gold-500/20 flex items-center justify-center">
+                          <MdMenuBook className="text-gold-400 text-[11px]" />
+                        </div>
+                        <span className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">Explore Resources</span>
+                      </div>
+                      <div className="mx-4 h-px bg-white/5 mb-1.5"></div>
+
+                      <div className="py-1 pb-2">
+                        <DropdownLink href="/resources/naat" label="Naat Shareef" iconWrapClass="bg-red-500/10 border-red-500/20" icon={<FaMicrophone className="text-red-400 text-sm" />} />
+                        <DropdownLink href="/resources/audio" label="Audio Library" iconWrapClass="bg-green-500/10 border-green-500/20" icon={<FaHeadphones className="text-green-400 text-sm" />} />
+                        <DropdownLink href="/resources/books" label="Books & PDFs" iconWrapClass="bg-gold-500/10 border-gold-500/20" icon={<GiBookCover className="text-gold-400 text-sm" />} />
+                        <DropdownLink href="/resources/bayan" label="Bayan" iconWrapClass="bg-purple-500/10 border-purple-500/20" icon={<FaVideo className="text-purple-400 text-sm" />} />
+                        <DropdownLink href="/resources/videos" label="Video Library" iconWrapClass="bg-red-500/10 border-red-500/20" icon={<FaVideo className="text-red-400 text-sm" />} />
+                        <DropdownLink href="/gallery" label="Gallery" iconWrapClass="bg-pink-500/10 border-pink-500/20" icon={<FaImages className="text-pink-400 text-sm" />} />
+                        <DropdownLink href="/blog" label="Articles & Insights" iconWrapClass="bg-blue-500/10 border-blue-500/20" icon={<FaBlog className="text-blue-400 text-sm" />} />
+                        <DropdownLink href="/resources/ask" label="Ask & Learn" iconWrapClass="bg-orange-500/10 border-orange-500/20" icon={<FaQuestionCircle className="text-orange-400 text-sm" />} />
+                      </div>
                     </div>
                   </div>
                 </div>

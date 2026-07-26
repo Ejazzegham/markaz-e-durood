@@ -135,18 +135,18 @@ export default function About() {
             {/* Urdu Text — same book-style treatment as the home page:
                 one continuous, justified paragraph (no per-line boxes),
                 white body text with a gold, bold call-to-action line. */}
-            <div className="relative bg-green-850/60 border border-gold-500/10 border-r-4 border-r-gold-500/60 rounded-xl p-5 sm:p-6">
+            <div className="relative bg-green-850/60 border border-gold-500/10 border-r-4 border-r-gold-500/60 rounded-xl p-5 sm:p-6 sm:py-7">
               <p
                 dir="rtl"
                 className="font-urdu text-white text-base sm:text-lg"
-                style={{ textAlign: 'justify', textAlignLast: 'right' }}
+                style={{ textAlign: 'justify', textAlignLast: 'right', lineHeight: 2.6 }}
               >
                 یہ ویب سائٹ پوری دنیا میں درود شریف اور اس کی برکات کو جمع کرنے اور اسے فروغ دینے کے لیے وقف ہے۔ درود شریف کے فوائد وڈیوز، لیکچرز، نعتوں، کتابوں اور مضامین کے ذریعے شیئر کیے جائیں گے۔ انشاء اللہ اس ویب سائٹ کو دیکھنے والے روحانی طور پر بلند ہو جائیں گے اور دوسروں کے ساتھ برکات بانٹنے کی ترغیب دی جاتی ہے۔
               </p>
               <p
                 dir="rtl"
-                className="font-urdu text-gold-400 font-bold text-base sm:text-lg mt-3 pt-3 border-t border-gold-500/10"
-                style={{ textAlign: 'justify', textAlignLast: 'right' }}
+                className="font-urdu text-gold-400 font-bold text-base sm:text-lg mt-4 pt-4 border-t border-gold-500/10"
+                style={{ textAlign: 'justify', textAlignLast: 'right', lineHeight: 2.6 }}
               >
                 اس سفر میں ہمارے ساتھ شامل ہوں اور روزانہ 50 ملین سے زیادہ درود کے ہدف تک پہنچنے میں ہماری مدد کریں۔
               </p>

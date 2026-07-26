@@ -66,18 +66,18 @@ export default function MissionSection() {
             {/* Urdu block — single justified, book-page paragraph.
                 No per-line dividers, no "اردو ترجمہ" label — just the
                 translation itself, set the same way on both pages. */}
-            <div className="bg-green-950/50 border border-gold-500/10 border-r-4 border-r-gold-500/60 rounded-xl px-4 py-4 sm:px-5 sm:py-5">
+            <div className="bg-green-950/50 border border-gold-500/10 border-r-4 border-r-gold-500/60 rounded-xl px-4 py-5 sm:px-5 sm:py-6">
               <p
                 dir="rtl"
                 className="font-urdu text-white text-sm sm:text-base md:text-[17px]"
-                style={{ textAlign: 'justify', textAlignLast: 'right' }}
+                style={{ textAlign: 'justify', textAlignLast: 'right', lineHeight: 2.6 }}
               >
                 {urduBody}
               </p>
               <p
                 dir="rtl"
-                className="font-urdu text-gold-400 font-bold text-sm sm:text-base md:text-[17px] mt-3 pt-3 border-t border-gold-500/15"
-                style={{ textAlign: 'justify', textAlignLast: 'right' }}
+                className="font-urdu text-gold-400 font-bold text-sm sm:text-base md:text-[17px] mt-4 pt-4 border-t border-gold-500/15"
+                style={{ textAlign: 'justify', textAlignLast: 'right', lineHeight: 2.6 }}
               >
                 {urduCallToAction}
               </p>
@@ -106,7 +106,7 @@ export default function MissionSection() {
 
             <div className="relative flex-1 min-h-[340px] sm:min-h-[420px] lg:min-h-0 rounded-2xl overflow-hidden border-2 border-gold-500/25 group-hover:border-gold-500/50 transition-all duration-500 shadow-2xl shadow-black/40 bg-gradient-to-b from-green-900/60 to-green-950/70">
               <Image
-                src="/public/sultan-fiaz-ul-hassan.png"
+                src="/mission/sultan-fiaz-ul-hassan.png"
                 alt="Sultan Fiaz-ul-Hassan Qadri"
                 fill
                 sizes="(max-width: 1024px) 100vw, 45vw"

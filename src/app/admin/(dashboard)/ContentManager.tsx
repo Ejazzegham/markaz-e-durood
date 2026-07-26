@@ -13,6 +13,7 @@ import {
   FaPen,
 } from 'react-icons/fa'
 import type { AdminModelKey, AdminFieldConfig } from '@/lib/admin/models'
+import PremiumSelect from '@/components/ui/PremiumSelect'
 
 interface ContentManagerProps {
   modelKey: AdminModelKey
@@ -202,8 +203,20 @@ export default function ContentManager({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSaving(true)
     setError('')
+
+    // PremiumSelect is a custom button/panel, not a native <select>, so it
+    // doesn't participate in HTML5 "required" form validation — check
+    // required dropdown fields ourselves before hitting the API.
+    const missingField = fields.find(
+      (f) => f.required && (f.type === 'select' || f.type === 'personSelect') && !form[f.name]
+    )
+    if (missingField) {
+      setError(`Please select a ${missingField.label.toLowerCase()}.`)
+      return
+    }
+
+    setSaving(true)
     try {
       const isEditing = !!editingItem
       const url = isEditing
@@ -343,26 +356,15 @@ export default function ContentManager({
 
               {field.type === 'personSelect' && (
                 <>
-                  <select
-                    required={field.required}
+                  <PremiumSelect
                     value={form[field.name] ?? ''}
-                    onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
-                    disabled={personOptionsLoading || personOptions.length === 0}
-                    className="admin-select w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-60"
-                  >
-                    <option value="" disabled>
-                      {personOptionsLoading
-                        ? 'Loading profiles...'
-                        : personOptions.length === 0
-                        ? 'No profiles found'
-                        : 'Select a profile...'}
-                    </option>
-                    {personOptions.map((p) => (
-                      <option key={p.id} value={p.name}>
-                        {p.name}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(v) => setForm({ ...form, [field.name]: v })}
+                    loading={personOptionsLoading}
+                    loadingLabel="Loading profiles..."
+                    emptyLabel="No profiles found"
+                    placeholder="Select a profile..."
+                    options={personOptions.map((p) => ({ value: p.name, label: p.name }))}
+                  />
                   {!personOptionsLoading && personOptions.length === 0 && (
                     <p className="text-red-400 text-xs mt-1">
                       No profiles yet — add one under &ldquo;{field.personSelectModel}&rdquo; profiles first, then come back here.
@@ -372,21 +374,12 @@ export default function ContentManager({
               )}
 
               {field.type === 'select' && (
-                <select
-                  required={field.required}
+                <PremiumSelect
                   value={form[field.name] ?? ''}
-                  onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
-                  className="admin-select w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-gold-500/50 transition-colors"
-                >
-                  <option value="" disabled>
-                    Select {field.label.toLowerCase()}...
-                  </option>
-                  {(field.options || []).map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(v) => setForm({ ...form, [field.name]: v })}
+                  placeholder={`Select ${field.label.toLowerCase()}...`}
+                  options={(field.options || []).map((opt) => ({ value: opt, label: opt }))}
+                />
               )}
 
               {field.type === 'textarea' && (

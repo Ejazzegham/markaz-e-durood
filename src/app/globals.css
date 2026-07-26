@@ -305,6 +305,39 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* ============================================
+   PremiumSelect — custom dropdown component
+   (src/components/ui/PremiumSelect.tsx)
+   Replaces the native <select> in the highest-
+   traffic spots (Durood category pickers, the
+   admin Naat form's Reciter/Category fields, and
+   every other admin content form) with a fully
+   styled panel — open animation, hover highlight,
+   selected checkmark — since a native <select>'s
+   open menu can't be restyled beyond its trigger.
+   ============================================ */
+@keyframes premiumSelectOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.premium-select-panel {
+  transform-origin: top center;
+  animation: premiumSelectOpen 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.premium-select-panel::-webkit-scrollbar {
+  width: 6px;
+}
+.premium-select-panel::-webkit-scrollbar-thumb {
+  background-color: rgba(212, 175, 55, 0.3);
+  border-radius: 999px;
+}
+
+/* ============================================
    LIKE BUTTON — small pop/burst on click
    ============================================ */
 @keyframes likePop {
