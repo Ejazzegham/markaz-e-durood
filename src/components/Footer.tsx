@@ -191,7 +191,7 @@ export default function Footer() {
                   <FaPhone className="text-gold-400 text-sm" />
                 </div>
                 <a href="tel:+923014391609" className="text-gray-300 hover:text-gold-400 transition-colors text-sm">
-                  0301-4391609
+                  0300-8162244
                 </a>
               </li>
               <li className="flex items-center gap-3 group">
