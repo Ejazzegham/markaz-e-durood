@@ -10,22 +10,6 @@ const nextConfig = {
     // function — it's loaded directly from node_modules at runtime
     // instead, which Vercel supports natively.
     serverComponentsExternalPackages: ['sharp'],
-    // Belt-and-suspenders: also exclude the binaries for platforms
-    // Vercel never runs on from the build-trace scan itself. Without
-    // this, tracing every sharp platform package can overflow the
-    // matcher's call stack during "Collecting build traces".
-    outputFileTracingExcludes: {
-      '*': [
-        'node_modules/@img/sharp-darwin-*/**',
-        'node_modules/@img/sharp-win32-*/**',
-        'node_modules/@img/sharp-linuxmusl-*/**',
-        'node_modules/@img/sharp-linux-arm*/**',
-        'node_modules/@img/sharp-wasm32/**',
-        'node_modules/@img/sharp-libvips-darwin-*/**',
-        'node_modules/@img/sharp-libvips-linuxmusl-*/**',
-        'node_modules/@img/sharp-libvips-linux-arm*/**',
-      ],
-    },
   },
   images: {
     domains: [
