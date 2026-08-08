@@ -175,7 +175,7 @@ export default function Contact() {
                 <div>
                   <h3 className="text-white font-semibold mb-1">Phone & Web</h3>
                   <p className="text-gray-300 text-sm">
-                    Tel: <a href="tel:03014391609" className="text-gold-500 hover:underline">0300-8162244</a>
+                    Tel: <a href="tel:03014391609" className="text-gold-500 hover:underline">0301-4391609</a>
                   </p>
                   <p className="text-gray-300 text-sm">
                     Web: <a href="https://www.markaz-e-durood.com" target="_blank" rel="noopener noreferrer" className="text-gold-500 hover:underline">
