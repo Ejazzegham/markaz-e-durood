@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fa'
 import type { AdminModelKey, AdminFieldConfig } from '@/lib/admin/models'
 import PremiumSelect from '@/components/ui/PremiumSelect'
+import { compressImageFile } from '@/lib/images/compressImageFile'
 
 interface ContentManagerProps {
   modelKey: AdminModelKey
@@ -65,13 +66,19 @@ function UploadField({
     setUploading(true)
     setError('')
     try {
+      // Shrink images right in the browser before they ever leave the
+      // device — smaller upload, smaller file stored, faster page loads
+      // for visitors, with no visible quality loss. PDFs pass through
+      // untouched.
+      const uploadFile = kind === 'image' ? await compressImageFile(file) : file
+
       const presignRes = await fetch('/api/admin/upload/presign', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          filename: file.name,
-          contentType: file.type,
-          size: file.size,
+          filename: uploadFile.name,
+          contentType: uploadFile.type,
+          size: uploadFile.size,
           folder,
           kind,
         }),
@@ -86,8 +93,8 @@ function UploadField({
       // Vercel's serverless function body-size limit entirely.
       const putRes = await fetch(presignData.uploadUrl, {
         method: 'PUT',
-        headers: { 'Content-Type': file.type },
-        body: file,
+        headers: { 'Content-Type': uploadFile.type },
+        body: uploadFile,
       })
       if (!putRes.ok) {
         setError('Upload failed. Please try again.')

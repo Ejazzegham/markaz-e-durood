@@ -190,7 +190,7 @@ export default function Footer() {
                 <div className="w-9 h-9 rounded-lg bg-gold-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-gold-500/20 transition-colors">
                   <FaPhone className="text-gold-400 text-sm" />
                 </div>
-                <a href="tel:+923014391609" className="text-gray-300 hover:text-gold-400 transition-colors text-sm">
+                <a href="tel:+923008162244" className="text-gray-300 hover:text-gold-400 transition-colors text-sm">
                   0300-8162244
                 </a>
               </li>
