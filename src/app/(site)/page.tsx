@@ -1,8 +1,9 @@
 'use client'
 
-import AudioPlayer from '@/components/AudioPlayer'
 import TopSendersLeaderboard from '@/components/home/TopSendersLeaderboard'
 import MissionSection from '@/components/home/MissionSection'
+import SocialConnectSection from '@/components/home/SocialConnectSection'
+import YouTubeChannelSection from '@/components/home/YouTubeChannelSection'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { 
@@ -130,10 +131,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      
-      {/* Audio Player */}
-      <AudioPlayer src="/audio/background-music.mp3" autoPlay={true} loop={true} />
-      
+
       {/* Hero Section - Text on Left, Image on Right */}
       <section className="relative min-h-[580px] h-auto overflow-hidden flex items-center pt-20 pb-10">
         {/* Background Image */}
@@ -283,6 +281,14 @@ export default function Home() {
 
       {/* Our Mission — bilingual (English/Urdu) statement with founder photo */}
       <MissionSection />
+
+      {/* Facebook Page + YouTube quick-look — live embeds side by side, always
+          in sync with new posts/videos as soon as they're posted */}
+      <SocialConnectSection />
+
+      {/* Full YouTube channel — Shorts pinned on top, every upload browsable
+          via infinite scroll, and comments read right here on the site */}
+      <YouTubeChannelSection />
 
       {/* Top Durood Senders — Today / Weekly / Monthly leaderboard with chart */}
       <TopSendersLeaderboard />
