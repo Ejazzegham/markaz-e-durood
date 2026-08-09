@@ -10,10 +10,10 @@ export async function GET(request: NextRequest) {
 
   try {
     const { items, nextPageToken } = await fetchUploadsPage(pageToken, 16)
-    // Shorts get their own pinned row up top, so keep them out of the
-    // regular scrolling grid to avoid showing every video twice.
-    const videos = items.filter((v) => !v.isShort)
-    return NextResponse.json({ items: videos, nextPageToken: nextPageToken || null })
+    // Whole channel, in real upload order — Shorts included inline (tagged
+    // with isShort) rather than split into a separate section, so the
+    // sidebar list matches the actual channel history.
+    return NextResponse.json({ items, nextPageToken: nextPageToken || null })
   } catch (err: any) {
     if (err instanceof YouTubeConfigError) {
       return NextResponse.json({ error: 'not_configured', message: err.message }, { status: 501 })

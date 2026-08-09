@@ -25,6 +25,61 @@ const INSTAGRAM_URL =
   'https://www.instagram.com/sultanfiazulhassan?igsh=MWtndGNwNjVpYWRoNw%3D%3D'
 const INSTAGRAM_HANDLE = '@sultanfiazulhassan'
 
+// ------------------------------------------------------------
+// Real posts/reels to embed live, using Instagram's own official embed
+// (no access token needed — Meta made public post/reel embeds tokenless
+// again from 15 June 2026). Instagram still has no "whole profile feed"
+// widget the way Facebook does, so this shows specific posts you choose
+// rather than an auto-updating feed.
+//
+// TO ADD YOUR REAL POSTS: open each post/reel on Instagram, tap "..." >
+// Copy Link, and paste the links below (2-6 links works best).
+// While this list is empty, a polished fallback card is shown instead.
+// ------------------------------------------------------------
+const INSTAGRAM_POST_URLS: string[] = [
+  // 'https://www.instagram.com/p/XXXXXXXXXXX/',
+  // 'https://www.instagram.com/reel/XXXXXXXXXXX/',
+]
+
+declare global {
+  interface Window {
+    instgrm?: { Embeds: { process: () => void } }
+  }
+}
+
+function InstagramEmbedGrid({ urls }: { urls: string[] }) {
+  const scriptLoaded = useRef(false)
+
+  useEffect(() => {
+    if (window.instgrm) {
+      window.instgrm.Embeds.process()
+      return
+    }
+    if (scriptLoaded.current) return
+    scriptLoaded.current = true
+    const script = document.createElement('script')
+    script.src = 'https://www.instagram.com/embed.js'
+    script.async = true
+    script.onload = () => window.instgrm?.Embeds.process()
+    document.body.appendChild(script)
+  }, [urls])
+
+  return (
+    <div className="grid sm:grid-cols-2 gap-4 w-full">
+      {urls.map((url) => (
+        <div key={url} className="rounded-xl overflow-hidden bg-white flex justify-center">
+          <blockquote
+            className="instagram-media"
+            data-instgrm-permalink={url}
+            data-instgrm-version="14"
+            style={{ width: '100%', margin: 0 }}
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 const EMBED_HEIGHT = 560
 
 export default function SocialConnectSection() {
@@ -166,44 +221,50 @@ export default function SocialConnectSection() {
               <h3 className="text-white font-semibold">Our Instagram</h3>
             </div>
 
-            <div className="flex-1 flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-black/30 px-6 py-10 text-center">
-              {/* Avatar ring, Instagram-style gradient */}
-              <div
-                className="w-24 h-24 rounded-full p-[3px] mb-5"
-                style={{
-                  background:
-                    'linear-gradient(135deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5)',
-                }}
-              >
-                <div className="w-full h-full rounded-full bg-ink-900 flex items-center justify-center">
-                  <FaInstagram className="text-white text-4xl" />
+            {INSTAGRAM_POST_URLS.length > 0 ? (
+              <div className="flex-1 rounded-2xl border border-white/10 bg-black/30 p-3 sm:p-4 overflow-y-auto scrollbar-hide" style={{ maxHeight: EMBED_HEIGHT }}>
+                <InstagramEmbedGrid urls={INSTAGRAM_POST_URLS} />
+              </div>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-black/30 px-6 py-10 text-center">
+                {/* Avatar ring, Instagram-style gradient */}
+                <div
+                  className="w-24 h-24 rounded-full p-[3px] mb-5"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5)',
+                  }}
+                >
+                  <div className="w-full h-full rounded-full bg-ink-900 flex items-center justify-center">
+                    <FaInstagram className="text-white text-4xl" />
+                  </div>
+                </div>
+
+                <p className="text-white font-semibold text-base">{INSTAGRAM_HANDLE}</p>
+                <p className="text-gray-400 text-sm mt-2 max-w-xs">
+                  Reels, photos and moments from our gatherings — follow along
+                  on Instagram for the latest.
+                </p>
+
+                {/* Decorative preview grid — not real posts, purely visual */}
+                <div className="grid grid-cols-3 gap-1.5 mt-7 w-full max-w-[220px]">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="aspect-square rounded-md flex items-center justify-center"
+                      style={{
+                        background:
+                          i % 2 === 0
+                            ? 'linear-gradient(135deg, rgba(214,41,118,0.18), rgba(150,47,191,0.12))'
+                            : 'linear-gradient(135deg, rgba(250,126,30,0.16), rgba(254,218,117,0.10))',
+                      }}
+                    >
+                      <FaInstagram className="text-white/20 text-sm" />
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              <p className="text-white font-semibold text-base">{INSTAGRAM_HANDLE}</p>
-              <p className="text-gray-400 text-sm mt-2 max-w-xs">
-                Reels, photos and moments from our gatherings — follow along
-                on Instagram for the latest.
-              </p>
-
-              {/* Decorative preview grid — not real posts, purely visual */}
-              <div className="grid grid-cols-3 gap-1.5 mt-7 w-full max-w-[220px]">
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="aspect-square rounded-md flex items-center justify-center"
-                    style={{
-                      background:
-                        i % 2 === 0
-                          ? 'linear-gradient(135deg, rgba(214,41,118,0.18), rgba(150,47,191,0.12))'
-                          : 'linear-gradient(135deg, rgba(250,126,30,0.16), rgba(254,218,117,0.10))',
-                    }}
-                  >
-                    <FaInstagram className="text-white/20 text-sm" />
-                  </div>
-                ))}
-              </div>
-            </div>
+            )}
 
             <div className="flex justify-center">
               <a
