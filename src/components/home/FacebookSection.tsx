@@ -87,27 +87,60 @@ function FallbackWidget() {
     document.body.appendChild(script)
   }, [])
 
+  // Facebook's widget itself can never exceed 500px (a hard limit Meta
+  // enforces server-side), so rather than leaving a small box floating
+  // in a lot of empty space, the section is designed as a deliberate
+  // wide split: a branded panel filling the extra width on one side,
+  // the live widget on the other.
   return (
-    <div className="relative w-full max-w-[560px] mx-auto rounded-3xl border border-gold-500/20 bg-gradient-to-b from-white/[0.05] to-black/40 backdrop-blur-xl p-3 sm:p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]">
+    <div className="relative w-full rounded-3xl border border-gold-500/20 bg-gradient-to-b from-white/[0.05] to-black/40 backdrop-blur-xl p-5 sm:p-8 lg:p-10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] overflow-hidden">
       <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold-400/70 to-transparent" />
-      <div className="w-full flex justify-center overflow-hidden rounded-2xl" style={{ minHeight: FB_HEIGHT }}>
-        <div
-          ref={pageRef}
-          className="fb-page w-full"
-          data-href={FACEBOOK_PAGE_URL}
-          data-tabs="timeline"
-          data-width=""
-          data-height={FB_HEIGHT}
-          data-small-header="false"
-          data-adapt-container-width="true"
-          data-hide-cover="false"
-          data-show-facepile="true"
-        >
-          <blockquote cite={FACEBOOK_PAGE_URL} className="fb-xfbml-parse-ignore">
-            <a href={FACEBOOK_PAGE_URL} target="_blank" rel="noopener noreferrer">
-              Sultan Fiaz ul Hassan Qadri
-            </a>
-          </blockquote>
+      <div className="absolute top-[-20%] left-[-10%] w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="relative grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-14 items-center">
+        {/* ---------------- Branded panel (left) ---------------- */}
+        <div className="text-center lg:text-left">
+          <div className="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mx-auto lg:mx-0 mb-6">
+            <FaFacebook className="text-blue-500 text-3xl" />
+          </div>
+          <h3 className="text-white text-2xl sm:text-3xl font-bold mb-4">
+            Join our community on Facebook
+          </h3>
+          <p className="text-gray-400 text-sm sm:text-base max-w-md mx-auto lg:mx-0 leading-relaxed">
+            Daily reminders, event announcements, photos and live streams —
+            all shared first on our official Facebook page. Follow along so
+            you never miss an update.
+          </p>
+          <a
+            href={FACEBOOK_PAGE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 mt-7 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold transition-all text-sm"
+          >
+            <FaFacebook /> Follow Our Page
+          </a>
+        </div>
+
+        {/* ---------------- Live widget (right) ---------------- */}
+        <div className="w-full lg:w-[500px] flex justify-center overflow-hidden rounded-2xl" style={{ minHeight: FB_HEIGHT }}>
+          <div
+            ref={pageRef}
+            className="fb-page w-full"
+            data-href={FACEBOOK_PAGE_URL}
+            data-tabs="timeline"
+            data-width=""
+            data-height={FB_HEIGHT}
+            data-small-header="false"
+            data-adapt-container-width="true"
+            data-hide-cover="false"
+            data-show-facepile="true"
+          >
+            <blockquote cite={FACEBOOK_PAGE_URL} className="fb-xfbml-parse-ignore">
+              <a href={FACEBOOK_PAGE_URL} target="_blank" rel="noopener noreferrer">
+                Sultan Fiaz ul Hassan Qadri
+              </a>
+            </blockquote>
+          </div>
         </div>
       </div>
     </div>
@@ -218,23 +251,27 @@ export default function FacebookSection() {
               </div>
             </div>
           </>
-        ) : (
+        ) : null}
+
+        {!loading && !posts && (
           // Not configured yet, or the request failed — graceful fallback
           // to Facebook's own official widget instead of a broken section.
           <FallbackWidget />
         )}
 
-        <div className="flex justify-center">
-          <a
-            href={FACEBOOK_PAGE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-8 sm:mt-10 bg-gold-500 hover:bg-gold-600 text-black px-8 py-3.5 rounded-lg font-semibold transition-all"
-          >
-            Visit Our Facebook Page
-            <FaExternalLinkAlt className="text-xs" />
-          </a>
-        </div>
+        {posts && (
+          <div className="flex justify-center">
+            <a
+              href={FACEBOOK_PAGE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 mt-8 sm:mt-10 bg-gold-500 hover:bg-gold-600 text-black px-8 py-3.5 rounded-lg font-semibold transition-all"
+            >
+              Visit Our Facebook Page
+              <FaExternalLinkAlt className="text-xs" />
+            </a>
+          </div>
+        )}
       </div>
     </section>
   )
