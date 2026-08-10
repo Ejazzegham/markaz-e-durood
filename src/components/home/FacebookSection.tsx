@@ -1,29 +1,62 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { FaFacebook, FaExternalLinkAlt } from 'react-icons/fa'
+import { useEffect, useRef, useState } from 'react'
+import { FaFacebook, FaThumbsUp, FaComment, FaExternalLinkAlt } from 'react-icons/fa'
 
 // ============================================================
-// FACEBOOK PAGE SECTION — full-width, official responsive embed
+// FACEBOOK PAGE SECTION — full-width, real posts via Graph API
 // ============================================================
-// Uses Facebook's own JavaScript SDK ("fb-page" plugin with
-// data-adapt-container-width="true") rather than a raw iframe URL.
-// This is the officially documented way to get a Page Plugin that
-// properly fills and centers in a wide, responsive container —
-// a plain iframe URL only ever renders at one fixed pixel width,
-// which is why a JS-measured width can get stuck small (e.g. if it
-// reads a width of 0 on the very first render) and look pinned to
-// the left with empty space beside it.
+// Pulls actual posts from the Page using the Facebook Graph API and
+// renders them as fully custom cards — the only way to get a
+// genuinely wide Facebook feed, since Facebook's free "Page Plugin"
+// widget is hard-capped at 500px by Facebook itself (a documented
+// platform limit, not something adjustable from here).
 //
-// The feed itself — posts, photos, videos, cover photo, follower
-// count — still updates live the moment something new is posted on
-// Facebook, no site changes needed to keep it current.
+// Needs FACEBOOK_PAGE_ID + FACEBOOK_PAGE_ACCESS_TOKEN set in the
+// environment (see .env.example for how to get a token that doesn't
+// expire). Until that's configured — or if the request ever fails —
+// this automatically falls back to Facebook's official centered
+// widget instead of showing a broken section.
 //
 // Page: https://www.facebook.com/sultanfiazulhassan
 // ============================================================
 
 const FACEBOOK_PAGE_URL = 'https://www.facebook.com/sultanfiazulhassan'
-const FB_HEIGHT = 800
+const FB_HEIGHT = 800 // used only by the fallback widget
+
+interface FacebookPost {
+  id: string
+  message: string
+  permalinkUrl: string
+  createdTime: string
+  image: string | null
+  likeCount: number
+  commentCount: number
+}
+
+function timeAgo(iso?: string) {
+  if (!iso) return ''
+  const seconds = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
+  const units: [number, string][] = [
+    [31536000, 'year'],
+    [2592000, 'month'],
+    [604800, 'week'],
+    [86400, 'day'],
+    [3600, 'hour'],
+    [60, 'minute'],
+  ]
+  for (const [secs, label] of units) {
+    const val = Math.floor(seconds / secs)
+    if (val >= 1) return `${val} ${label}${val > 1 ? 's' : ''} ago`
+  }
+  return 'just now'
+}
+
+function formatCount(n: number) {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`
+  return String(n)
+}
 
 declare global {
   interface Window {
@@ -31,25 +64,20 @@ declare global {
   }
 }
 
-export default function FacebookSection() {
+function FallbackWidget() {
   const pageRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // fb-root is required once per page by the SDK.
     if (!document.getElementById('fb-root')) {
       const root = document.createElement('div')
       root.id = 'fb-root'
       document.body.prepend(root)
     }
-
     if (window.FB) {
-      // SDK already loaded (e.g. client-side navigation) — just parse.
       window.FB.XFBML.parse(pageRef.current ?? undefined)
       return
     }
-
     if (document.getElementById('facebook-jssdk')) return
-
     const script = document.createElement('script')
     script.id = 'facebook-jssdk'
     script.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0'
@@ -57,6 +85,51 @@ export default function FacebookSection() {
     script.defer = true
     script.crossOrigin = 'anonymous'
     document.body.appendChild(script)
+  }, [])
+
+  return (
+    <div className="relative w-full max-w-[560px] mx-auto rounded-3xl border border-gold-500/20 bg-gradient-to-b from-white/[0.05] to-black/40 backdrop-blur-xl p-3 sm:p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]">
+      <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold-400/70 to-transparent" />
+      <div className="w-full flex justify-center overflow-hidden rounded-2xl" style={{ minHeight: FB_HEIGHT }}>
+        <div
+          ref={pageRef}
+          className="fb-page w-full"
+          data-href={FACEBOOK_PAGE_URL}
+          data-tabs="timeline"
+          data-width=""
+          data-height={FB_HEIGHT}
+          data-small-header="false"
+          data-adapt-container-width="true"
+          data-hide-cover="false"
+          data-show-facepile="true"
+        >
+          <blockquote cite={FACEBOOK_PAGE_URL} className="fb-xfbml-parse-ignore">
+            <a href={FACEBOOK_PAGE_URL} target="_blank" rel="noopener noreferrer">
+              Sultan Fiaz ul Hassan Qadri
+            </a>
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function FacebookSection() {
+  const [posts, setPosts] = useState<FacebookPost[] | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/facebook/posts')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error || !data.posts?.length) {
+          setPosts(null)
+        } else {
+          setPosts(data.posts)
+        }
+      })
+      .catch(() => setPosts(null))
+      .finally(() => setLoading(false))
   }, [])
 
   return (
@@ -85,38 +158,71 @@ export default function FacebookSection() {
             <div className="w-20 h-[2px] bg-gold-500"></div>
           </div>
           <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
-            Stay connected with our latest pictures, videos and updates —
-            this feed is live and updates automatically the moment we post
-            on Facebook.
+            Stay connected with our latest pictures, videos and updates from Facebook.
           </p>
         </div>
 
-        {/* Live Facebook Page embed — full width, centered, premium card */}
-        <div className="relative w-full rounded-3xl border border-gold-500/20 bg-gradient-to-b from-white/[0.05] to-black/40 backdrop-blur-xl p-3 sm:p-6 lg:p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]">
-          {/* Thin top accent line, matches the site's other premium cards */}
-          <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold-400/70 to-transparent" />
-
-          <div className="w-full flex justify-center overflow-hidden rounded-2xl" style={{ minHeight: FB_HEIGHT }}>
-            <div
-              ref={pageRef}
-              className="fb-page w-full"
-              data-href={FACEBOOK_PAGE_URL}
-              data-tabs="timeline"
-              data-width=""
-              data-height={FB_HEIGHT}
-              data-small-header="false"
-              data-adapt-container-width="true"
-              data-hide-cover="false"
-              data-show-facepile="true"
-            >
-              <blockquote cite={FACEBOOK_PAGE_URL} className="fb-xfbml-parse-ignore">
-                <a href={FACEBOOK_PAGE_URL} target="_blank" rel="noopener noreferrer">
-                  Sultan Fiaz ul Hassan Qadri
-                </a>
-              </blockquote>
-            </div>
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="rounded-2xl border border-gold-500/10 bg-white/[0.03] animate-pulse h-80" />
+            ))}
           </div>
-        </div>
+        ) : posts ? (
+          <>
+            {/* Real posts, pulled live via the Graph API — full width */}
+            <div className="relative rounded-3xl border border-gold-500/20 bg-gradient-to-b from-white/[0.04] to-black/30 backdrop-blur-xl p-4 sm:p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]">
+              <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold-400/70 to-transparent" />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {posts.map((post) => (
+                  <a
+                    key={post.id}
+                    href={post.permalinkUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex flex-col rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] hover:border-gold-500/30 hover:bg-white/[0.05] transition-all"
+                  >
+                    {post.image && (
+                      <div className="relative w-full aspect-video overflow-hidden bg-black">
+                        <img
+                          src={post.image}
+                          alt=""
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex-1 flex flex-col p-4">
+                      {post.message && (
+                        <p className="text-gray-300 text-sm leading-relaxed line-clamp-4 flex-1">
+                          {post.message}
+                        </p>
+                      )}
+
+                      <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-gray-500">
+                        <span>{timeAgo(post.createdTime)}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="flex items-center gap-1">
+                            <FaThumbsUp className="text-blue-500" /> {formatCount(post.likeCount)}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <FaComment className="text-gold-500" /> {formatCount(post.commentCount)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          // Not configured yet, or the request failed — graceful fallback
+          // to Facebook's own official widget instead of a broken section.
+          <FallbackWidget />
+        )}
 
         <div className="flex justify-center">
           <a
