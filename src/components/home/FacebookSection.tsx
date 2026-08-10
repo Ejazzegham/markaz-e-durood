@@ -23,7 +23,7 @@ import { FaFacebook, FaExternalLinkAlt } from 'react-icons/fa'
 // ============================================================
 
 const FACEBOOK_PAGE_URL = 'https://www.facebook.com/sultanfiazulhassan'
-const FB_HEIGHT = 720 // fixed feed height — posts scroll inside it
+const FB_HEIGHT = 800 // fixed feed height — posts scroll inside it
 
 export default function FacebookSection() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -36,7 +36,7 @@ export default function FacebookSection() {
     if (!el) return
     // Facebook's page plugin supports roughly 180–1500px
     const w = Math.floor(el.clientWidth)
-    const clamped = Math.max(300, Math.min(w, 960))
+    const clamped = Math.max(300, Math.min(w, 1500))
     setPluginWidth((prev) => (prev === clamped ? prev : clamped))
   }, [])
 
@@ -77,7 +77,7 @@ export default function FacebookSection() {
       <div className="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] bg-gold-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-5xl mx-auto">
+      <div className="relative z-10 max-w-[1400px] mx-auto">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">
           <div className="flex justify-center mb-6">

@@ -2,7 +2,7 @@
 
 import TopSendersLeaderboard from '@/components/home/TopSendersLeaderboard'
 import MissionSection from '@/components/home/MissionSection'
-import SocialConnectSection from '@/components/home/SocialConnectSection'
+import FacebookSection from '@/components/home/FacebookSection'
 import YouTubeChannelSection from '@/components/home/YouTubeChannelSection'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
@@ -284,7 +284,7 @@ export default function Home() {
 
       {/* Facebook Page + YouTube quick-look — live embeds side by side, always
           in sync with new posts/videos as soon as they're posted */}
-      <SocialConnectSection />
+      <FacebookSection />
 
       {/* Full YouTube channel — Shorts pinned on top, every upload browsable
           via infinite scroll, and comments read right here on the site */}
