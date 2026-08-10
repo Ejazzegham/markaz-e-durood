@@ -1,72 +1,63 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 import { FaFacebook, FaExternalLinkAlt } from 'react-icons/fa'
 
 // ============================================================
-// FACEBOOK PAGE SECTION
+// FACEBOOK PAGE SECTION — full-width, official responsive embed
 // ============================================================
-// Embeds our full Facebook Page directly on the home page using
-// Facebook's official "Page Plugin" (an iframe served by Facebook
-// itself). Because Facebook renders the iframe live from the real
-// page, the timeline shown here — posts, photos, videos, cover
-// photo, follower count — updates automatically the moment
-// something new is posted on Facebook. Nothing on this site needs
-// to be touched to keep it current.
+// Uses Facebook's own JavaScript SDK ("fb-page" plugin with
+// data-adapt-container-width="true") rather than a raw iframe URL.
+// This is the officially documented way to get a Page Plugin that
+// properly fills and centers in a wide, responsive container —
+// a plain iframe URL only ever renders at one fixed pixel width,
+// which is why a JS-measured width can get stuck small (e.g. if it
+// reads a width of 0 on the very first render) and look pinned to
+// the left with empty space beside it.
 //
-// The embed width is measured from its container with a
-// ResizeObserver and passed to Facebook's iframe URL, so it fills
-// the full section width on desktop and shrinks to fit small
-// phone screens instead of sitting inside a small fixed-size box.
+// The feed itself — posts, photos, videos, cover photo, follower
+// count — still updates live the moment something new is posted on
+// Facebook, no site changes needed to keep it current.
 //
 // Page: https://www.facebook.com/sultanfiazulhassan
 // ============================================================
 
 const FACEBOOK_PAGE_URL = 'https://www.facebook.com/sultanfiazulhassan'
-const FB_HEIGHT = 800 // fixed feed height — posts scroll inside it
+const FB_HEIGHT = 800
+
+declare global {
+  interface Window {
+    FB?: { XFBML: { parse: (el?: HTMLElement) => void } }
+  }
+}
 
 export default function FacebookSection() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const resizeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [pluginWidth, setPluginWidth] = useState<number | null>(null)
-  const [loaded, setLoaded] = useState(false)
-
-  const measure = useCallback(() => {
-    const el = containerRef.current
-    if (!el) return
-    // Facebook's page plugin supports roughly 180–1500px
-    const w = Math.floor(el.clientWidth)
-    const clamped = Math.max(300, Math.min(w, 1500))
-    setPluginWidth((prev) => (prev === clamped ? prev : clamped))
-  }, [])
+  const pageRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    measure()
-
-    const el = containerRef.current
-    if (!el || typeof ResizeObserver === 'undefined') return
-
-    const observer = new ResizeObserver(() => {
-      // Debounce so the iframe (which remounts on width change) doesn't
-      // reload dozens of times while the user is actively resizing/
-      // rotating their phone.
-      if (resizeTimer.current) clearTimeout(resizeTimer.current)
-      resizeTimer.current = setTimeout(measure, 250)
-    })
-    observer.observe(el)
-
-    return () => {
-      observer.disconnect()
-      if (resizeTimer.current) clearTimeout(resizeTimer.current)
+    // fb-root is required once per page by the SDK.
+    if (!document.getElementById('fb-root')) {
+      const root = document.createElement('div')
+      root.id = 'fb-root'
+      document.body.prepend(root)
     }
-  }, [measure])
 
-  const encodedHref = encodeURIComponent(FACEBOOK_PAGE_URL)
-  const pluginSrc = pluginWidth
-    ? `https://www.facebook.com/plugins/page.php?href=${encodedHref}` +
-      `&tabs=timeline&width=${pluginWidth}&height=${FB_HEIGHT}&small_header=false` +
-      `&adapt_container_width=true&hide_cover=false&show_facepile=true`
-    : null
+    if (window.FB) {
+      // SDK already loaded (e.g. client-side navigation) — just parse.
+      window.FB.XFBML.parse(pageRef.current ?? undefined)
+      return
+    }
+
+    if (document.getElementById('facebook-jssdk')) return
+
+    const script = document.createElement('script')
+    script.id = 'facebook-jssdk'
+    script.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0'
+    script.async = true
+    script.defer = true
+    script.crossOrigin = 'anonymous'
+    document.body.appendChild(script)
+  }, [])
 
   return (
     <section
@@ -100,44 +91,31 @@ export default function FacebookSection() {
           </p>
         </div>
 
-        {/* Live Facebook Page embed — full width premium card */}
-        <div
-          ref={containerRef}
-          className="relative w-full rounded-3xl border border-gold-500/20 bg-gradient-to-b from-white/[0.05] to-black/40 backdrop-blur-xl p-3 sm:p-6 lg:p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]"
-        >
+        {/* Live Facebook Page embed — full width, centered, premium card */}
+        <div className="relative w-full rounded-3xl border border-gold-500/20 bg-gradient-to-b from-white/[0.05] to-black/40 backdrop-blur-xl p-3 sm:p-6 lg:p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]">
           {/* Thin top accent line, matches the site's other premium cards */}
           <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-gold-400/70 to-transparent" />
 
-          {/* Loading skeleton, shown until the iframe reports it has loaded */}
-          {!loaded && (
+          <div className="w-full flex justify-center overflow-hidden rounded-2xl" style={{ minHeight: FB_HEIGHT }}>
             <div
-              className="w-full rounded-2xl bg-white/5 animate-pulse flex items-center justify-center"
-              style={{ height: FB_HEIGHT }}
+              ref={pageRef}
+              className="fb-page w-full"
+              data-href={FACEBOOK_PAGE_URL}
+              data-tabs="timeline"
+              data-width=""
+              data-height={FB_HEIGHT}
+              data-small-header="false"
+              data-adapt-container-width="true"
+              data-hide-cover="false"
+              data-show-facepile="true"
             >
-              <FaFacebook className="text-white/10 text-6xl" />
+              <blockquote cite={FACEBOOK_PAGE_URL} className="fb-xfbml-parse-ignore">
+                <a href={FACEBOOK_PAGE_URL} target="_blank" rel="noopener noreferrer">
+                  Sultan Fiaz ul Hassan Qadri
+                </a>
+              </blockquote>
             </div>
-          )}
-
-          {pluginSrc && (
-            <div
-              className="w-full flex justify-center"
-              style={{ minHeight: loaded ? undefined : 0, height: loaded ? FB_HEIGHT : 0, overflow: 'hidden' }}
-            >
-              <iframe
-                key={pluginWidth}
-                src={pluginSrc}
-                width={pluginWidth ?? undefined}
-                height={FB_HEIGHT}
-                style={{ border: 'none', overflow: 'hidden', width: '100%', maxWidth: '100%' }}
-                scrolling="no"
-                frameBorder="0"
-                allowFullScreen
-                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-                title="Markaz-e-Durood Facebook Page"
-                onLoad={() => setLoaded(true)}
-              />
-            </div>
-          )}
+          </div>
         </div>
 
         <div className="flex justify-center">
