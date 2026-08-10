@@ -106,10 +106,17 @@ function FallbackWidget() {
           <h3 className="text-white text-2xl sm:text-3xl font-bold mb-4">
             Join our community on Facebook
           </h3>
-          <p className="text-gray-400 text-sm sm:text-base max-w-md mx-auto lg:mx-0 leading-relaxed">
-            Daily reminders, event announcements, photos and live streams —
-            all shared first on our official Facebook page. Follow along so
-            you never miss an update.
+          <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Our Facebook page is where the Markaz-e-Durood community gathers
+            between visits to the site — daily reminders to recite Durood
+            Shareef, announcements for upcoming mehfils and gatherings,
+            photographs and short clips from our programs, and, from time to
+            time, live broadcasts of sermons and Durood ceremonies as they
+            happen. It's often the fastest way to hear about a program before
+            it begins, and the simplest way to stay close to the reminders
+            and teachings shared by Sultan Fiaz ul Hassan Qadri each week.
+            Many thousands from our community already follow along there —
+            we'd love for you to join them.
           </p>
           <a
             href={FACEBOOK_PAGE_URL}
