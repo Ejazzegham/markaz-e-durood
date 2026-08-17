@@ -218,12 +218,12 @@ export default function Footer() {
           </div>
           <div className="mt-4 pt-4 border-t border-white/5 text-center">
             <a
-              href="https://hz-technology.vercel.app/"
+              href="https://faah-technology.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-gold-400 text-xs transition-colors"
             >
-              Powered by <span className="font-semibold">HZ Technology</span>
+              Powered by <span className="font-semibold">FAAH Technology</span>
             </a>
           </div>
         </div>
