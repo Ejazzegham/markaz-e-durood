@@ -200,8 +200,7 @@ export default function Navbar() {
                   Markaz-e-Naat
                 </Link>
 
-                <Link href="/quran" className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
-                  <FaQuran className="text-xs" />
+                <Link href="/quran" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
                   Qur&apos;an
                 </Link>
 
