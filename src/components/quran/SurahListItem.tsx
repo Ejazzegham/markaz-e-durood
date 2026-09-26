@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { SurahMeta } from '@/lib/quran/surahs'
+import RevelationIcon from './RevelationBadge'
 
 export default function SurahListItem({ surah }: { surah: SurahMeta }) {
   return (
@@ -29,7 +30,8 @@ export default function SurahListItem({ surah }: { surah: SurahMeta }) {
         <div className="flex items-center gap-2 mt-0.5">
           <span className="text-gray-400 text-xs truncate">{surah.englishMeaning}</span>
           <span className="text-gray-600 text-xs">&middot;</span>
-          <span className="text-gray-500 text-xs flex-shrink-0">
+          <span className="flex items-center gap-1 text-gray-500 text-xs flex-shrink-0">
+            <RevelationIcon type={surah.revelationType} size={14} />
             {surah.revelationType} &middot; {surah.versesCount} verses
           </span>
         </div>

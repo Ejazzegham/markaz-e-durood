@@ -7,6 +7,7 @@ import { FaQuran, FaCog, FaPlay, FaStop, FaSpinner, FaChevronLeft, FaChevronRigh
 import QuranBackground, { QuranBottomOrnament } from '@/components/quran/QuranBackground'
 import QuranTitleBar from '@/components/quran/QuranTitleBar'
 import QuranSettingsPanel from '@/components/quran/QuranSettingsPanel'
+import RevelationIcon from '@/components/quran/RevelationBadge'
 import AyahCard from '@/components/quran/AyahCard'
 import { fetchSurah, type SurahReading } from '@/lib/quran/api'
 import { getSurahMeta, SURAHS } from '@/lib/quran/surahs'
@@ -90,7 +91,13 @@ export default function SurahReadingPage() {
         icon={<FaQuran className="text-gold-500 text-xl" />}
         titleWhite={meta.name}
         titleGold={`(${meta.arabicName})`}
-        subtitle={`${meta.englishMeaning} · ${meta.revelationType} · ${meta.versesCount} verses`}
+        subtitle={
+          <span className="inline-flex items-center gap-1.5">
+            {meta.englishMeaning} &middot;
+            <RevelationIcon type={meta.revelationType} size={13} />
+            {meta.revelationType} &middot; {meta.versesCount} verses
+          </span>
+        }
         actions={
           <>
             {reading && (

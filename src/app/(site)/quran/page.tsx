@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { FaQuran, FaSearch, FaCog, FaBookmark, FaHistory, FaArrowRight } from 'react-icons/fa'
 import QuranBackground, { QuranBottomOrnament } from '@/components/quran/QuranBackground'
 import QuranTitleBar from '@/components/quran/QuranTitleBar'
@@ -46,6 +47,38 @@ export default function QuranHubPage() {
 
   return (
     <QuranBackground>
+      {/* ============================================
+          HERO BANNER
+          ============================================ */}
+      <div className="relative mb-8 h-[220px] sm:h-[300px] lg:h-[360px] rounded-3xl overflow-hidden border border-gold-500/20 shadow-2xl shadow-black/30">
+        <Image
+          src="/quran/quran-hero.jpg"
+          alt="The Holy Qur'an resting on a stand"
+          fill
+          priority
+          sizes="(max-width: 1024px) 100vw, 1600px"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#04140c]/95 via-[#04140c]/70 to-[#04140c]/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#04140c]/70 via-transparent to-transparent" />
+
+        <div className="relative z-10 h-full flex items-center px-6 sm:px-10 lg:px-14">
+          <div className="max-w-lg">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-500/15 border border-gold-500/30 text-gold-400 text-[11px] font-semibold uppercase tracking-widest mb-4">
+              <FaQuran className="text-[10px]" />
+              Kalam-e-Ilahi
+            </span>
+            <h2 className="text-white text-2xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-3">
+              The Noble <span className="text-gold-500">Qur&apos;an</span>
+            </h2>
+            <p className="text-gray-300 text-sm sm:text-base leading-relaxed hidden sm:block">
+              Read and listen with Urdu &amp; English Tarjuma and Tafseer — a
+              light upon light for every heart that seeks guidance.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <QuranTitleBar
         backHref="/"
         icon={<FaQuran className="text-gold-500 text-xl" />}

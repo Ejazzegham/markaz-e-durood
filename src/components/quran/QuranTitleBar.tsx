@@ -9,7 +9,7 @@ interface QuranTitleBarProps {
   icon: ReactNode
   titleWhite: string
   titleGold: string
-  subtitle?: string
+  subtitle?: ReactNode
   /** Right-aligned stat badges / action buttons */
   actions?: ReactNode
 }
