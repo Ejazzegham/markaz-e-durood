@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { Timestamp } from 'firebase-admin/firestore'
 import { getDb } from '@/lib/db/firestore'
 import { USER_COOKIE_NAME, verifyAdminToken } from '@/lib/auth/jwt'
 
@@ -57,13 +56,27 @@ export async function POST(request: NextRequest) {
 
     // Same lightweight abuse guard as the Durood counter: block rapid-fire
     // repeat submissions from the same IP.
-    const threeSecondsAgo = Timestamp.fromDate(new Date(Date.now() - 3000))
+    //
+    // NOTE: this intentionally filters on ipAddress only (a single '=='
+    // filter, which Firestore indexes automatically) and checks the time
+    // window in code afterwards, rather than adding a second
+    // `.where('createdAt', '>=', ...)` clause. Combining an equality
+    // filter with a range filter on a different field requires a
+    // composite index, and the 'donations' collection never had one
+    // created for it — that was throwing a FAILED_PRECONDITION error on
+    // every single donation submission (both from the website and the
+    // app, since the app posts to this same endpoint).
+    const threeSecondsAgoMs = Date.now() - 3000
     const recentSnap = await donations
       .where('ipAddress', '==', ipAddress)
-      .where('createdAt', '>=', threeSecondsAgo)
-      .limit(1)
+      .limit(10)
       .get()
-    if (!recentSnap.empty) {
+    const submittedTooSoon = recentSnap.docs.some((doc) => {
+      const createdAt = doc.data().createdAt
+      const createdAtMs = createdAt?.toMillis ? createdAt.toMillis() : new Date(createdAt).getTime()
+      return createdAtMs >= threeSecondsAgoMs
+    })
+    if (submittedTooSoon) {
       return NextResponse.json(
         { error: 'Please wait a moment before submitting again.' },
         { status: 429 }
