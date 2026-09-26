@@ -4,6 +4,7 @@ import '../globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import SplashScreen from '@/components/SplashScreen'
+import VisitorTracker from '@/components/VisitorTracker'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -74,6 +75,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
+        <VisitorTracker />
         <SplashScreen>
           <Navbar />
           <div className="pt-20 min-h-screen flex flex-col">
