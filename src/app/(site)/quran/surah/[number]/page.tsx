@@ -94,7 +94,7 @@ export default function SurahReadingPage() {
         subtitle={
           <span className="inline-flex items-center gap-1.5">
             {meta.englishMeaning} &middot;
-            <RevelationIcon type={meta.revelationType} size={13} />
+            <RevelationIcon type={meta.revelationType} size={16} />
             {meta.revelationType} &middot; {meta.versesCount} verses
           </span>
         }

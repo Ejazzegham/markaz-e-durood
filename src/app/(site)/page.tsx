@@ -4,6 +4,8 @@ import TopSendersLeaderboard from '@/components/home/TopSendersLeaderboard'
 import MissionSection from '@/components/home/MissionSection'
 import FacebookSection from '@/components/home/FacebookSection'
 import YouTubeChannelSection from '@/components/home/YouTubeChannelSection'
+import DateCalendarsSection from '@/components/home/DateCalendarsSection'
+import PrayerTimesSection from '@/components/home/PrayerTimesSection'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { 
@@ -252,6 +254,30 @@ export default function Home() {
                 </div>
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================
+          CALENDARS + WORLDWIDE PRAYER TIMES
+          ============================================ */}
+      <section className="py-14 sm:py-16 px-4" style={{ background: 'linear-gradient(to bottom, #071018, #02070d)' }}>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-gold-500 text-3xl sm:text-4xl font-bold mb-3">Today&apos;s Date &amp; Prayer Times</h2>
+            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base">
+              English, Islamic and Punjabi dates at a glance, plus accurate Namaz timings for anywhere in the world — with Azan.
+            </p>
+            <div className="mt-5 flex justify-center">
+              <div className="w-20 h-[2px] bg-gold-500"></div>
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <DateCalendarsSection />
+          </div>
+          <div className="max-w-3xl mx-auto">
+            <PrayerTimesSection />
           </div>
         </div>
       </section>

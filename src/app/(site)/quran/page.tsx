@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { FaQuran, FaSearch, FaCog, FaBookmark, FaHistory, FaArrowRight } from 'react-icons/fa'
+import { FaQuran, FaSearch, FaCog, FaBookmark, FaHistory, FaArrowRight, FaBookOpen, FaLayerGroup } from 'react-icons/fa'
 import QuranBackground, { QuranBottomOrnament } from '@/components/quran/QuranBackground'
 import QuranTitleBar from '@/components/quran/QuranTitleBar'
 import QuranSettingsPanel from '@/components/quran/QuranSettingsPanel'
@@ -37,6 +37,14 @@ export default function QuranHubPage() {
     if (!q) return PARAS
     return PARAS.filter((p) => String(p.number) === q)
   }, [query])
+
+  // Derived straight from the reference data, so these never drift out of
+  // sync with SURAHS/PARAS above.
+  const stats = useMemo(() => {
+    const totalVerses = SURAHS.reduce((sum, s) => sum + s.versesCount, 0)
+    const makki = SURAHS.filter((s) => s.revelationType === 'Makki').length
+    return { totalVerses, makki, madani: SURAHS.length - makki }
+  }, [])
 
   const lastRead = settings.hydrated ? settings.lastRead : null
   const lastReadHref = lastRead
@@ -77,6 +85,25 @@ export default function QuranHubPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Quick stats strip */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+        {[
+          { label: 'Surahs', value: SURAHS.length },
+          { label: 'Para (Juz)', value: PARAS.length },
+          { label: 'Total Verses', value: stats.totalVerses.toLocaleString('en-US') },
+          { label: 'Makki Surahs', value: stats.makki },
+          { label: 'Madani Surahs', value: stats.madani },
+        ].map((stat) => (
+          <div
+            key={stat.label}
+            className="text-center px-3 py-3.5 rounded-xl bg-gradient-to-b from-green-850/70 to-green-850/40 border border-gold-500/10 hover:border-gold-500/30 transition-colors"
+          >
+            <p className="text-gold-400 text-lg sm:text-2xl font-bold tabular-nums leading-tight">{stat.value}</p>
+            <p className="text-gray-500 text-[10px] sm:text-[11px] uppercase tracking-wider mt-1">{stat.label}</p>
+          </div>
+        ))}
       </div>
 
       <QuranTitleBar
@@ -129,40 +156,46 @@ export default function QuranHubPage() {
 
       {/* Tabs + search */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="flex bg-green-850/80 border border-gold-500/20 rounded-xl p-1 w-fit">
+        <div className="flex bg-green-850/80 border border-gold-500/20 rounded-xl p-1 w-fit shadow-inner shadow-black/20">
           <button
             onClick={() => setTab('surah')}
-            className={`px-5 py-2 rounded-lg text-sm font-medium transition-colors ${
-              tab === 'surah' ? 'bg-gold-500 text-[#0b1d12]' : 'text-gray-300 hover:text-white'
+            className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              tab === 'surah'
+                ? 'bg-gradient-to-b from-gold-400 to-gold-600 text-[#0b1d12] shadow-md shadow-gold-500/20'
+                : 'text-gray-300 hover:text-white'
             }`}
           >
+            <FaBookOpen className="text-xs" />
             Surah
           </button>
           <button
             onClick={() => setTab('para')}
-            className={`px-5 py-2 rounded-lg text-sm font-medium transition-colors ${
-              tab === 'para' ? 'bg-gold-500 text-[#0b1d12]' : 'text-gray-300 hover:text-white'
+            className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              tab === 'para'
+                ? 'bg-gradient-to-b from-gold-400 to-gold-600 text-[#0b1d12] shadow-md shadow-gold-500/20'
+                : 'text-gray-300 hover:text-white'
             }`}
           >
+            <FaLayerGroup className="text-xs" />
             Para
           </button>
         </div>
 
         <div className="relative flex-1">
-          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm" />
+          <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-sm" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={tab === 'surah' ? 'Search Surah by name or number...' : 'Search Para by number...'}
-            className="w-full pl-10 pr-4 py-2.5 bg-green-850/80 border border-gold-500/20 rounded-xl focus:border-gold-500 outline-none text-white text-sm transition"
+            className="w-full pl-10 pr-4 py-2.5 bg-green-850/80 border border-gold-500/20 rounded-xl focus:border-gold-500 focus:shadow-[0_0_0_3px_rgba(212,175,55,0.15)] outline-none text-white text-sm transition-all duration-200"
           />
         </div>
       </div>
 
       {/* Grid */}
       {tab === 'surah' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredSurahs.map((s) => (
             <SurahListItem key={s.number} surah={s} />
           ))}
