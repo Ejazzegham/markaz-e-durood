@@ -135,7 +135,7 @@ export default function PremiumSelect({
                   ? 'border-gold-500 shadow-[0_0_0_3px_rgba(212,175,55,0.15)]'
                   : 'border-white/20 hover:border-gold-500/50'
               } ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`
-            : `w-full flex items-center justify-between gap-2 px-3.5 py-2.5 bg-green-950 border rounded-lg text-sm text-left transition-all duration-200 ${
+            : `w-full flex items-center justify-between gap-2 ${icon ? 'pl-9 pr-3.5' : 'px-3.5'} py-2.5 bg-green-950 border rounded-lg text-sm text-left transition-all duration-200 ${
                 open
                   ? 'border-gold-500 shadow-[0_0_0_3px_rgba(212,175,55,0.15)]'
                   : 'border-gold-500/20 hover:border-gold-500/50'
@@ -143,7 +143,11 @@ export default function PremiumSelect({
         }
       >
         {icon && (
-          <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gold-500 pointer-events-none">
+          <span
+            className={`absolute top-1/2 -translate-y-1/2 text-gold-500 pointer-events-none ${
+              variant === 'pill' ? 'left-5' : 'left-3'
+            }`}
+          >
             {icon}
           </span>
         )}
