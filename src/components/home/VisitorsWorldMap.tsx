@@ -2,11 +2,18 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { ComposableMap, Geographies, Geography, Sphere, Graticule, Marker } from 'react-simple-maps'
+import { geoDistance } from 'd3-geo'
 import { FaGlobeAmericas, FaUsers, FaFlag, FaBolt, FaSpinner, FaCircle } from 'react-icons/fa'
 import { countryCodeToFlag } from '@/lib/geo/countryFlag'
 
 const GEO_URL = '/data/world-110m.json'
 const POLL_MS = 45000
+const GLOBE_SIZE = 440
+const GLOBE_SCALE = 190
+// Degrees of longitude the globe spins per animation tick — a full
+// rotation takes a couple of minutes, slow enough to feel ambient rather
+// than distracting.
+const SPIN_STEP = 0.06
 
 interface CountryStat {
   country: string
@@ -66,6 +73,21 @@ export default function VisitorsWorldMap() {
   const [loading, setLoading] = useState(true)
   const [failed, setFailed] = useState(false)
 
+  // Orthographic "camera" rotation — [longitude, latitude, roll]. Starts
+  // centered on Africa/Europe/the Middle East (a good default frame with
+  // plenty of visible landmass) and auto-spins slowly, pausing while the
+  // visitor's cursor is over the globe so they can read a marker's tooltip.
+  const [rotate, setRotate] = useState<[number, number, number]>([-20, -12, 0])
+  const [spinning, setSpinning] = useState(true)
+
+  useEffect(() => {
+    if (!spinning) return
+    const t = setInterval(() => {
+      setRotate(([lambda, phi, gamma]) => [lambda - SPIN_STEP, phi, gamma])
+    }, 30)
+    return () => clearInterval(t)
+  }, [spinning])
+
   useEffect(() => {
     let cancelled = false
 
@@ -106,6 +128,15 @@ export default function VisitorsWorldMap() {
   )
 
   const hasData = !!stats && stats.totalVisitors > 0
+
+  // Only markers on the near hemisphere should render — a raw projection
+  // of a far-side point would otherwise get mirrored onto the visible
+  // face, which looks like a ghost dot floating on the wrong continent.
+  const visibleMarkers = useMemo(() => {
+    if (!stats) return []
+    const center: [number, number] = [-rotate[0], -rotate[1]]
+    return stats.markers.filter((m) => geoDistance([m.lng, m.lat], center) < Math.PI / 2)
+  }, [stats, rotate])
 
   return (
     <div className="relative bg-gradient-to-b from-green-850/90 to-green-850/60 border border-gold-500/20 rounded-2xl p-5 sm:p-7 shadow-lg shadow-black/20 h-full flex flex-col">
@@ -154,24 +185,52 @@ export default function VisitorsWorldMap() {
             ))}
           </div>
 
-          {/* Map */}
-          <div className="relative rounded-xl border border-gold-500/10 bg-ink-950/60 overflow-hidden mb-4">
+          {/* Globe */}
+          <div
+            className="relative rounded-xl border border-gold-500/10 bg-ink-950/60 overflow-hidden mb-4 flex items-center justify-center py-2"
+            onMouseEnter={() => setSpinning(false)}
+            onMouseLeave={() => setSpinning(true)}
+          >
             <ComposableMap
-              width={800}
-              height={420}
-              projectionConfig={{ scale: 128, center: [0, 12] }}
-              className="w-full h-auto block"
+              width={GLOBE_SIZE}
+              height={GLOBE_SIZE}
+              projection="geoOrthographic"
+              projectionConfig={{ scale: GLOBE_SCALE, rotate }}
+              className="w-full max-w-[420px] h-auto block drop-shadow-[0_15px_35px_rgba(0,0,0,0.55)]"
             >
-              <Sphere id="rsm-sphere" fill="#02070d" stroke="rgba(212,175,55,0.12)" strokeWidth={0.5} />
-              <Graticule stroke="rgba(212,175,55,0.05)" strokeWidth={0.4} />
+              <defs>
+                <radialGradient id="globeOcean" cx="34%" cy="32%" r="75%">
+                  <stop offset="0%" stopColor="#0f2a30" />
+                  <stop offset="55%" stopColor="#081a1f" />
+                  <stop offset="100%" stopColor="#020a0d" />
+                </radialGradient>
+                <radialGradient id="globeAtmosphere" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#D4AF37" stopOpacity="0" />
+                  <stop offset="82%" stopColor="#D4AF37" stopOpacity="0" />
+                  <stop offset="94%" stopColor="#D4AF37" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+
+              {/* Soft glowing atmosphere ring around the globe's edge */}
+              <circle
+                cx={GLOBE_SIZE / 2}
+                cy={GLOBE_SIZE / 2}
+                r={GLOBE_SCALE + 12}
+                fill="url(#globeAtmosphere)"
+              />
+
+              <Sphere id="rsm-sphere" fill="url(#globeOcean)" stroke="rgba(212,175,55,0.25)" strokeWidth={0.75} />
+              <Graticule stroke="rgba(212,175,55,0.08)" strokeWidth={0.4} />
+
               <Geographies geography={GEO_URL}>
                 {({ geographies }) =>
                   geographies.map((geo) => (
                     <Geography
                       key={geo.rsmKey}
                       geography={geo}
-                      fill="#0e2a1d"
-                      stroke="rgba(212,175,55,0.18)"
+                      fill="#123424"
+                      stroke="rgba(212,175,55,0.25)"
                       strokeWidth={0.4}
                       className="outline-none focus:outline-none"
                     />
@@ -179,7 +238,7 @@ export default function VisitorsWorldMap() {
                 }
               </Geographies>
 
-              {stats?.markers.map((m, i) => {
+              {visibleMarkers.map((m, i) => {
                 const r = markerRadius(m.count)
                 return (
                   <Marker key={i} coordinates={[m.lng, m.lat]}>

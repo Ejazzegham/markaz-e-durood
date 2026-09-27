@@ -18,6 +18,7 @@ import {
 import { Coordinates, Qibla } from 'adhan'
 import PremiumSelect from '@/components/ui/PremiumSelect'
 import { WORLD_CITIES, DEFAULT_CITY_ID, findCityById } from '@/lib/prayer/cities'
+import { reverseGeocode } from '@/lib/geo/reverseGeocode'
 import {
   computePrayerTimes,
   formatClockTime,
@@ -71,6 +72,7 @@ export default function PrayerTimesSection() {
   const fajrAudioRef = useRef<HTMLAudioElement | null>(null)
   const regularAudioRef = useRef<HTMLAudioElement | null>(null)
   const playedTodayRef = useRef<Set<string>>(new Set())
+  const geoRequestId = useRef(0)
 
   // ---- Load persisted preferences (mute / method / madhab) ----------------
   useEffect(() => {
@@ -132,13 +134,24 @@ export default function PrayerTimesSection() {
       setLocationSource('denied')
       return
     }
+    const requestId = ++geoRequestId.current
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setCoords({ latitude: pos.coords.latitude, longitude: pos.coords.longitude })
+        const { latitude, longitude } = pos.coords
+        setCoords({ latitude, longitude })
         setTimeZone(undefined) // browser's own local timezone matches its own location
         setLocationLabel('Your Location')
         setSelectedCityId(null)
         setLocationSource('auto')
+
+        // Upgrade the generic "Your Location" label to a real place name
+        // once it resolves — but only if this is still the latest request
+        // (the visitor hasn't since picked a different city or re-detected).
+        reverseGeocode(latitude, longitude).then((label) => {
+          if (label && geoRequestId.current === requestId) {
+            setLocationLabel(label)
+          }
+        })
       },
       () => {
         applyCity(DEFAULT_CITY_ID)
@@ -329,7 +342,7 @@ export default function PrayerTimesSection() {
           value={selectedCityId ?? ''}
           onChange={handleCityChange}
           options={CITY_OPTIONS}
-          placeholder="Choose a city..."
+          placeholder={locationSource === 'auto' ? locationLabel : 'Choose a city...'}
           icon={<FaMapMarkerAlt className="text-xs" />}
         />
 

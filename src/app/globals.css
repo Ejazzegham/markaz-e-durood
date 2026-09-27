@@ -49,13 +49,13 @@ body::-webkit-scrollbar {
    ============================================ */
 .durood-banner {
   position: absolute;
-  top: 55px;
+  top: 104px;
   left: 0;
   width: 100%;
   overflow: hidden;
   z-index: 40;
   background: transparent;
-  padding: 20px 0;
+  padding: 18px 0;
 }
 
 .durood-scroll {
@@ -160,8 +160,8 @@ body::-webkit-scrollbar {
 
 @media (max-width: 768px) {
   .durood-banner {
-    top: 13px;
-    padding: 12px 0;
+    top: 92px;
+    padding: 10px 0;
   }
   .durood-scroll {
     font-size: 18px;

@@ -171,7 +171,7 @@ export default function Navbar() {
           <div className="flex justify-between items-center h-20 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-x-6">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group flex-shrink-0 justify-self-start">
-              <div className="relative w-12 h-12">
+              <div className="relative w-14 h-14">
                 <img 
                   src="/logo.png" 
                   alt="Markaz-e-Durood" 
@@ -179,7 +179,7 @@ export default function Navbar() {
                 />
               </div>
               <div className="flex flex-col leading-tight">
-                <span className="text-xl font-bold tracking-wide hover:text-gold-400 transition-colors">
+                <span className="text-[19px] font-bold tracking-wide whitespace-nowrap hover:text-gold-400 transition-colors">
                   Markaz-e-Durood
                 </span>
               </div>

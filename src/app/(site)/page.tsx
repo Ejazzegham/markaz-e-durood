@@ -181,7 +181,7 @@ export default function Home() {
 
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
-          <div className="max-w-3xl text-center">
+          <div className="max-w-3xl text-center pt-9 sm:pt-11">
             <h2 className="text-gold-500 text-4xl sm:text-5xl md:text-6xl font-black uppercase mb-4 sm:mb-6">
               MARKAZ-E-DUROOD
             </h2>
