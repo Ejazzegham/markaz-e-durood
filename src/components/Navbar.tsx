@@ -168,7 +168,7 @@ export default function Navbar() {
         scrolled ? 'shadow-2xl border-gold-500/30' : 'shadow-md border-gold-500/10'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-x-6">
+          <div className="flex justify-between items-center h-20 lg:grid lg:grid-cols-[minmax(260px,1fr)_auto_minmax(260px,1fr)] lg:gap-x-6">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group flex-shrink-0 justify-self-start">
               <div className="relative w-14 h-14">
