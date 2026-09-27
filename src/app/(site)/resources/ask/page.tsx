@@ -223,7 +223,7 @@ export default function AskAndLearn() {
                 <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6 text-center">
                   <FaCheckCircle className="text-4xl text-green-400 mx-auto mb-3" />
                   <h3 className="text-white font-semibold">Question Submitted!</h3>
-                  <p className="text-gray-400 text-sm">We'll get back to you with authentic guidance.</p>
+                  <p className="text-gray-400 text-sm">We&apos;ll get back to you with authentic guidance.</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -390,7 +390,7 @@ export default function AskAndLearn() {
                           <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 text-center">
                             <p className="text-yellow-400 text-sm">
                               <FaClock className="inline mr-2" />
-                              This question is being reviewed. We'll answer it soon!
+                              This question is being reviewed. We&apos;ll answer it soon!
                             </p>
                           </div>
                         )}

@@ -112,11 +112,11 @@ function FallbackWidget() {
             Shareef, announcements for upcoming mehfils and gatherings,
             photographs and short clips from our programs, and, from time to
             time, live broadcasts of sermons and Durood ceremonies as they
-            happen. It's often the fastest way to hear about a program before
+            happen. It&apos;s often the fastest way to hear about a program before
             it begins, and the simplest way to stay close to the reminders
             and teachings shared by Sultan Fiaz ul Hassan Qadri each week.
             Many thousands from our community already follow along there —
-            we'd love for you to join them.
+            we&apos;d love for you to join them.
           </p>
           <a
             href={FACEBOOK_PAGE_URL}

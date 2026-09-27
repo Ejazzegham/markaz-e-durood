@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { FaHeart, FaUser, FaLock, FaCheckCircle,  FaArrowLeft, FaHands, FaListUl } from 'react-icons/fa'
 import { DUROOD_CATEGORIES, DUROOD_CATEGORY_OTHER } from '@/constants/duroodCategories'
 import PremiumSelect from '@/components/ui/PremiumSelect'
@@ -91,10 +92,12 @@ return (
       "
     >
       {/* Background */}
-      <img
+      <Image
         src="/login-bg.jpg"
         alt="Submit Durood"
-        className="absolute inset-0 w-full h-full object-cover"
+        fill
+        sizes="(max-width: 1024px) 100vw, 1024px"
+        className="object-cover"
       />
 
       <div className="absolute inset-0 bg-black/60 lg:bg-black/10" />

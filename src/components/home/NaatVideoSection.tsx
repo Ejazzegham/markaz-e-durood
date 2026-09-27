@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { FaPlay, FaMicrophone, FaArrowRight, FaSpinner } from 'react-icons/fa'
 
@@ -128,10 +129,12 @@ export default function NaatVideoSection() {
                       }`}
                     >
                       <div className="relative w-24 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-green-900">
-                        <img
+                        <Image
                           src={thumbFor(item.youtubeId)}
                           alt={item.title}
-                          className="w-full h-full object-cover"
+                          fill
+                          sizes="96px"
+                          className="object-cover"
                         />
                         <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
                           <FaPlay className="text-white text-xs" />

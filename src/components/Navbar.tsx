@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { 
@@ -172,10 +173,13 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group flex-shrink-0 justify-self-start">
               <div className="relative w-14 h-14">
-                <img 
-                  src="/logo.png" 
-                  alt="Markaz-e-Durood" 
-                  className="w-full h-full object-contain"
+                <Image
+                  src="/logo.png"
+                  alt="Markaz-e-Durood"
+                  fill
+                  sizes="56px"
+                  priority
+                  className="object-contain"
                 />
               </div>
               <div className="flex flex-col leading-tight">
@@ -349,9 +353,11 @@ export default function Navbar() {
             <div className="relative flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className="w-9 h-9 rounded-lg bg-gold-500/10 border border-gold-500/20 flex items-center justify-center flex-shrink-0">
-                  <img 
-                    src="/logo.png" 
-                    alt="Markaz-e-Durood" 
+                  <Image
+                    src="/logo.png"
+                    alt="Markaz-e-Durood"
+                    width={28}
+                    height={28}
                     className="w-7 h-7 object-contain"
                   />
                 </div>

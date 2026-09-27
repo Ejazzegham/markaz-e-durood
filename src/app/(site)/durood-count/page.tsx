@@ -523,7 +523,7 @@ export default function DuroodCount() {
         <div className="bg-gold-500/10 border border-gold-500/20 rounded-xl p-6 text-center">
           <FaMosque className="text-gold-500 text-2xl mx-auto mb-2" />
           <p className="text-gray-300 text-sm">
-            "The best of you are those who send the most blessings upon me."
+            &ldquo;The best of you are those who send the most blessings upon me.&rdquo;
             <span className="block text-gold-500 text-xs mt-1">— Prophet Muhammad ﷺ</span>
           </p>
         </div>

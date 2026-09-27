@@ -56,9 +56,11 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-1 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-3 sm:gap-4 mb-4">
               {/* Logo - No Box */}
-              <img 
-                src="/logo.png" 
-                alt="Markaz-e-Durood" 
+              <Image
+                src="/logo.png"
+                alt="Markaz-e-Durood"
+                width={64}
+                height={64}
                 className="w-12 h-12 sm:w-16 sm:h-16 object-contain flex-shrink-0"
               />
               <div>

@@ -21,18 +21,12 @@ const nextConfig = {
   images: {
     domains: [
       'localhost',
+      'img.youtube.com',
+      'i.ytimg.com',
       ...(process.env.R2_PUBLIC_URL ? [new URL(process.env.R2_PUBLIC_URL).hostname] : []),
     ],
   },
   reactStrictMode: true,
-  // Temporarily ignore TypeScript errors during build
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  // Temporarily ignore ESLint errors during build
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 }
 
 module.exports = nextConfig

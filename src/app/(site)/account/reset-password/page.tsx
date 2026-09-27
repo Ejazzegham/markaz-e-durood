@@ -3,6 +3,7 @@
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { FaLock, FaArrowRight, FaArrowLeft, FaCheckCircle, FaEye, FaEyeSlash } from 'react-icons/fa'
 
 function ResetPasswordForm() {
@@ -73,10 +74,12 @@ function ResetPasswordForm() {
           shadow-[0_25px_80px_rgba(0,0,0,0.45)]
         "
       >
-        <img
+        <Image
           src="/login-bg.jpg"
           alt="Reset your password"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          sizes="(max-width: 1024px) 100vw, 1024px"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-black/60 lg:bg-black/10" />
 

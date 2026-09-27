@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   FaUser,
   FaEnvelope,
@@ -86,10 +87,12 @@ export default function RegisterPage() {
           shadow-[0_25px_80px_rgba(0,0,0,0.45)]
         "
       >
-        <img
+        <Image
           src="/login-bg.jpg"
           alt="Register"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          sizes="(max-width: 1024px) 100vw, 1024px"
+          className="object-cover"
         />
 
         <div className="absolute inset-0 bg-black/60 lg:bg-black/10" />

@@ -51,7 +51,7 @@ export interface AdminModelConfig {
   label: string
   singularLabel: string
   delegate: ReturnType<typeof collection>
-  schema: z.ZodTypeAny
+  schema: z.AnyZodObject
   fields: AdminFieldConfig[]
   titleField: string
   subtitleField?: string

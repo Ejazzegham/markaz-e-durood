@@ -1,6 +1,7 @@
 'use client'
 
 import TopSendersLeaderboard from '@/components/home/TopSendersLeaderboard'
+import DownloadAppSection from '@/components/home/DownloadAppSection'
 import MissionSection from '@/components/home/MissionSection'
 import FacebookSection from '@/components/home/FacebookSection'
 import YouTubeChannelSection from '@/components/home/YouTubeChannelSection'
@@ -8,6 +9,7 @@ import DateCalendarsSection from '@/components/home/DateCalendarsSection'
 import PrayerTimesSection from '@/components/home/PrayerTimesSection'
 import VisitorsWorldMap from '@/components/home/VisitorsWorldMap'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect, useRef } from 'react'
 import { 
   FaQuran, 
@@ -121,6 +123,10 @@ export default function Home() {
     if (justAdded === 0) return
     const fade = setTimeout(() => setJustAdded(0), 1400)
     return () => clearTimeout(fade)
+    // Intentionally keyed on tickKey only: tickKey bumps exactly once per
+    // new justAdded value, so this correctly fires once per tick without
+    // re-running again when justAdded resets to 0 a moment later.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tickKey])
 
   // Slide strip — runs as a continuous CSS marquee (see .slides-marquee-*
@@ -138,10 +144,13 @@ export default function Home() {
       {/* Hero Section - Text on Left, Image on Right */}
       <section className="relative min-h-[580px] h-auto overflow-hidden flex items-center pt-20 pb-10">
         {/* Background Image */}
-        <img
+        <Image
           src="/madina-hero.jpg"
           alt="Masjid Nabawi"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
 
         {/* DUROOD BANNER - Transparent Background */}
@@ -292,18 +301,24 @@ export default function Home() {
       <section className="w-full">
         {/* Desktop Image - Hidden on mobile */}
         <div className="hidden md:block w-full">
-          <img 
-            src="/vision/v1.png" 
-            alt="Vision" 
+          <Image
+            src="/vision/v1.png"
+            alt="Vision"
+            width={1920}
+            height={817}
+            sizes="100vw"
             className="w-full h-auto object-cover"
           />
         </div>
         
         {/* Mobile Image - Hidden on desktop */}
         <div className="block md:hidden w-full">
-          <img 
-            src="/vision/m1.png" 
-            alt="Vision" 
+          <Image
+            src="/vision/m1.png"
+            alt="Vision"
+            width={1535}
+            height={1049}
+            sizes="100vw"
             className="w-full h-auto object-cover"
           />
         </div>
@@ -477,9 +492,11 @@ export default function Home() {
             {/* Two back-to-back copies create a seamless infinite loop */}
             {[...slides, ...slides].map((slide, i) => (
               <div key={`${slide.id}-${i}`} className="slides-marquee-item">
-                <img
+                <Image
                   src={slide.image}
                   alt={`Slide ${slide.id}`}
+                  width={1536}
+                  height={1024}
                   className="h-20 sm:h-28 md:h-32 w-auto rounded-lg border border-gold-500/10 shadow-md object-contain bg-white"
                 />
               </div>
@@ -501,6 +518,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <DownloadAppSection />
     </div>
   )
 }

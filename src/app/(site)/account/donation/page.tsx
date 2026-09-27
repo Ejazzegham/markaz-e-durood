@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { FaEnvelope, FaLock, FaArrowRight, FaUser } from 'react-icons/fa'
 
 export default function LoginPage() {
@@ -21,10 +22,12 @@ export default function LoginPage() {
         "
       >
         {/* Background Image */}
-        <img
+        <Image
           src="/login-bg.jpg"
           alt="Markaz e Durood"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          sizes="(max-width: 1024px) 100vw, 1024px"
+          className="object-cover"
         />
 
         {/* Overlay */}
@@ -205,7 +208,7 @@ export default function LoginPage() {
               {!isRegister ? (
                 <>
                   <p className="text-white/80">
-                    Don't have an account?
+                    Don&apos;t have an account?
                   </p>
 
                   <button

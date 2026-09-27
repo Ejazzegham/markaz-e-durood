@@ -3,6 +3,7 @@
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { FaEnvelope, FaLock, FaArrowRight, FaUser, FaCheckCircle, FaEye, FaEyeSlash } from 'react-icons/fa'
 
 function LoginPageInner() {
@@ -95,10 +96,12 @@ function LoginPageInner() {
         "
       >
         {/* Background Image */}
-        <img
+        <Image
           src="/login-bg.jpg"
           alt="Markaz e Durood"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          sizes="(max-width: 1024px) 100vw, 1024px"
+          className="object-cover"
         />
 
         {/* Overlay */}
@@ -294,7 +297,7 @@ function LoginPageInner() {
                   {!isRegister ? (
                     <>
                       <p className="text-white/80">
-                        Don't have an account?
+                        Don&apos;t have an account?
                       </p>
 
                       <button

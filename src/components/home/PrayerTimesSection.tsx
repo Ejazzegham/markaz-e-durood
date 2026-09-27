@@ -183,6 +183,10 @@ export default function PrayerTimesSection() {
   const qiblaDegrees = useMemo(() => {
     if (!coords) return null
     return Math.round(Qibla(new Coordinates(coords.latitude, coords.longitude)))
+    // Depending on the primitive lat/lng instead of the coords object
+    // avoids recomputing when a new coords object is set with the same
+    // values.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coords?.latitude, coords?.longitude])
 
   const { rows, currentPrayer, nextKey, nextTime } = useMemo(() => {

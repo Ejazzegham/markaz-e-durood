@@ -95,7 +95,11 @@ export default function TopSendersLeaderboard() {
     return () => clearInterval(interval)
   }, [])
 
-  const list = data ? data[range] : []
+  // Memoized so this doesn't create a brand-new array reference on every
+  // render (the `data ? ... : []` fallback used to do exactly that, which
+  // silently defeated the chartData memo below — it was recomputing on
+  // every render regardless of whether the underlying data had changed).
+  const list = useMemo(() => (data ? data[range] : []), [data, range])
   const top3 = list.slice(0, 3)
   const rest = list.slice(3, 10)
 

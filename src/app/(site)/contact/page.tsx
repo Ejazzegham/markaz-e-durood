@@ -218,7 +218,7 @@ export default function Contact() {
                 <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-8 text-center">
                   <FaCheckCircle className="text-5xl text-green-400 mx-auto mb-4" />
                   <h3 className="text-2xl font-bold text-white mb-2">Message Sent!</h3>
-                  <p className="text-gray-400 text-sm">Thank you for reaching out. We'll get back to you soon.</p>
+                  <p className="text-gray-400 text-sm">Thank you for reaching out. We&apos;ll get back to you soon.</p>
                   <p className="text-gold-500 text-xs mt-3">InshaAllah, your message has been received.</p>
                 </div>
               ) : (

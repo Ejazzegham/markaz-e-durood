@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   FaDonate,
   FaUser,
@@ -185,10 +186,12 @@ export default function DonatePage() {
         "
       >
         {/* Background Image */}
-        <img
+        <Image
           src="/donation-bg.jpg"
           alt="Donate"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          sizes="(max-width: 1024px) 100vw, 1024px"
+          className="object-cover"
         />
 
         {/* Overlay */}

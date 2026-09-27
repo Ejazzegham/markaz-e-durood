@@ -43,6 +43,11 @@ export default function AudioPlayer({ src, autoPlay = true, loop = true }: Audio
         audioRef.current = null
       }
     }
+    // volume is intentionally read only as the initial value for a newly
+    // created Audio element. Later volume changes are applied directly to
+    // audioRef.current in handleVolumeChange below — adding volume here
+    // would tear down and recreate (restart) the audio on every slider move.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src, loop, autoPlay])
 
   // Try to play on any user interaction

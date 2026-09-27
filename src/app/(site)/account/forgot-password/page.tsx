@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { FaEnvelope, FaArrowRight, FaArrowLeft, FaCheckCircle } from 'react-icons/fa'
 
 export default function ForgotPasswordPage() {
@@ -50,10 +51,12 @@ export default function ForgotPasswordPage() {
           shadow-[0_25px_80px_rgba(0,0,0,0.45)]
         "
       >
-        <img
+        <Image
           src="/login-bg.jpg"
           alt="Reset your password"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          sizes="(max-width: 1024px) 100vw, 1024px"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-black/60 lg:bg-black/10" />
 
@@ -77,14 +80,14 @@ export default function ForgotPasswordPage() {
                 <FaCheckCircle className="text-5xl text-gold-500 mb-4" />
                 <p className="text-white/90 text-lg mb-2">Check your email</p>
                 <p className="text-white/70 text-sm leading-6">
-                  If an account exists for <span className="text-gold-500">{email}</span>, we've sent
-                  a link to reset your password. It's valid for 1 hour.
+                  If an account exists for <span className="text-gold-500">{email}</span>, we&apos;ve sent
+                  a link to reset your password. It&apos;s valid for 1 hour.
                 </p>
               </div>
             ) : (
               <>
                 <p className="text-white/80 mb-8">
-                  Enter the email linked to your account and we'll send you a link to reset your password.
+                  Enter the email linked to your account and we&apos;ll send you a link to reset your password.
                 </p>
 
                 <form onSubmit={handleSubmit}>

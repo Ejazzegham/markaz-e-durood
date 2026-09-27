@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { FaYoutube, FaPlay, FaExternalLinkAlt, FaSpinner, FaClock } from 'react-icons/fa'
 
 // ============================================================
@@ -261,10 +262,12 @@ export default function YouTubeChannelSection() {
                       }`}
                     >
                       <div className={`relative shrink-0 rounded-lg overflow-hidden bg-black ${item.isShort ? 'w-16 aspect-[9/16]' : 'w-32 sm:w-36 aspect-video'}`}>
-                        <img
+                        <Image
                           src={item.thumbnail}
                           alt={item.title}
-                          className="absolute inset-0 w-full h-full object-cover"
+                          fill
+                          sizes="(max-width: 640px) 128px, 144px"
+                          className="object-cover"
                           loading="lazy"
                         />
                         {isActive ? (
@@ -316,7 +319,7 @@ export default function YouTubeChannelSection() {
                 )}
                 {!nextPageToken && videos.length > 0 && (
                   <p className="text-center text-gray-600 text-[11px] py-3">
-                    That's the whole channel.
+                    That&apos;s the whole channel.
                   </p>
                 )}
               </div>

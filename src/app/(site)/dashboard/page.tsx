@@ -172,10 +172,10 @@ export default function Dashboard() {
                 <div>
                   <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
                     <span className="text-white">{me?.name ? me.name.split(' ')[0] : 'User'}</span>
-                    <span className="text-gold-500">'s Dashboard</span>
+                    <span className="text-gold-500">&apos;s Dashboard</span>
                   </h1>
                   <p className="text-gray-400 text-xs hidden sm:block">
-                    Welcome back{me?.name ? `, ${me.name}` : ''}! Here's your activity overview
+                    Welcome back{me?.name ? `, ${me.name}` : ''}! Here&apos;s your activity overview
                   </p>
                 </div>
               </div>
@@ -267,7 +267,7 @@ export default function Dashboard() {
           <div className="p-4">
             {myHistory.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 text-sm mb-4">You haven't submitted any Durood yet.</p>
+                <p className="text-gray-500 text-sm mb-4">You haven&apos;t submitted any Durood yet.</p>
                 <Link
                   href="/account/submit-durood"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gold-500 hover:bg-gold-600 text-black text-sm font-bold transition-all"
@@ -332,7 +332,7 @@ export default function Dashboard() {
           <div className="p-4">
             {myDonations.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 text-sm mb-4">You haven't made any donations yet.</p>
+                <p className="text-gray-500 text-sm mb-4">You haven&apos;t made any donations yet.</p>
                 <Link
                   href="/account/donate"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gold-500 hover:bg-gold-600 text-black text-sm font-bold transition-all"
