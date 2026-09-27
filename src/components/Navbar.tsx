@@ -168,7 +168,7 @@ export default function Navbar() {
         scrolled ? 'shadow-2xl border-gold-500/30' : 'shadow-md border-gold-500/10'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20 lg:grid lg:grid-cols-[minmax(260px,1fr)_auto_minmax(260px,1fr)] lg:gap-x-6">
+          <div className="flex justify-between items-center h-20 lg:grid lg:grid-cols-[280px_auto_280px] lg:gap-x-4">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group flex-shrink-0 justify-self-start">
               <div className="relative w-14 h-14">
@@ -187,26 +187,26 @@ export default function Navbar() {
 
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center justify-center justify-self-center">
-              <div className="flex items-center gap-1">
-                <Link href="/" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+              <div className="flex items-center gap-0.5 xl:gap-1">
+                <Link href="/" className="px-2.5 xl:px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
                   Home
                 </Link>
                 
-                <a href="https://masjidehussain.com/" target="_blank" rel="noopener noreferrer" className="px-3 py-2 rounded-lg hover:bg-white/10 transition-all duration-300 text-sm font-medium whitespace-nowrap text-blue-400 hover:text-blue-300">
+                <a href="https://masjidehussain.com/" target="_blank" rel="noopener noreferrer" className="px-2.5 xl:px-3 py-2 rounded-lg hover:bg-white/10 transition-all duration-300 text-sm font-medium whitespace-nowrap text-blue-400 hover:text-blue-300">
                   Masjid-e-Hussain
                 </a>
 
-                <Link href="/markaz-e-naat" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                <Link href="/markaz-e-naat" className="px-2.5 xl:px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
                   Markaz-e-Naat
                 </Link>
 
-                <Link href="/quran" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                <Link href="/quran" className="px-2.5 xl:px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
                   Qur&apos;an
                 </Link>
 
                 {/* Resources Dropdown — premium panel */}
                 <div className="relative group">
-                  <button className="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                  <button className="flex items-center gap-1 px-2.5 xl:px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
                     Resources
                     <FaCaretDown className="text-xs transition-transform duration-300 group-hover:rotate-180" />
                   </button>
@@ -236,35 +236,32 @@ export default function Navbar() {
                         <DropdownLink href="/resources/videos" label="Video Library" iconWrapClass="bg-red-500/10 border-red-500/20" icon={<FaVideo className="text-red-400 text-sm" />} />
                         <DropdownLink href="/gallery" label="Gallery" iconWrapClass="bg-pink-500/10 border-pink-500/20" icon={<FaImages className="text-pink-400 text-sm" />} />
                         <DropdownLink href="/blog" label="Articles & Insights" iconWrapClass="bg-blue-500/10 border-blue-500/20" icon={<FaBlog className="text-blue-400 text-sm" />} />
+                        <DropdownLink href="/news" label="News" iconWrapClass="bg-cyan-500/10 border-cyan-500/20" icon={<FaNewspaper className="text-cyan-400 text-sm" />} />
                         <DropdownLink href="/resources/ask" label="Ask & Learn" iconWrapClass="bg-orange-500/10 border-orange-500/20" icon={<FaQuestionCircle className="text-orange-400 text-sm" />} />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <Link href="/durood-count" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                <Link href="/durood-count" className="px-2.5 xl:px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
                   Durood Count
                 </Link>
 
-                <Link href="/account/donate" className="px-3 py-2 rounded-lg hover:bg-white/10 transition-all duration-300 text-sm font-semibold whitespace-nowrap text-gold-400 hover:text-gold-300">
+                <Link href="/account/donate" className="px-2.5 xl:px-3 py-2 rounded-lg hover:bg-white/10 transition-all duration-300 text-sm font-semibold whitespace-nowrap text-gold-400 hover:text-gold-300">
                   Donate
                 </Link>
 
-                <Link href="/news" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
-                  News
-                </Link>
-
-                <Link href="/about" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                <Link href="/about" className="px-2.5 xl:px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
                   About
                 </Link>
 
-                <Link href="/contact" className="px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                <Link href="/contact" className="px-2.5 xl:px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
                   Contact
                 </Link>
 
                 {/* Account Dropdown */}
                 <div className="relative group">
-                  <button className="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
+                  <button className="flex items-center gap-1 px-2.5 xl:px-3 py-2 rounded-lg hover:bg-white/10 hover:text-gold-400 transition-all duration-300 text-sm font-medium whitespace-nowrap">
                     {user ? user.name.split(' ')[0] : 'Account'} <FaCaretDown className="text-xs" />
                   </button>
                   <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
@@ -468,6 +465,9 @@ export default function Navbar() {
                     <Link href="/blog" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
                       <FaBlog className="text-blue-400 text-xs" /> Articles & Insights
                     </Link>
+                    <Link href="/news" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
+                      <FaNewspaper className="text-cyan-400 text-xs" /> News
+                    </Link>
                     <Link href="/resources/ask" className="flex items-center gap-2.5 py-2 text-[13px] text-gray-300 hover:text-gold-400 transition-colors" onClick={() => setIsOpen(false)}>
                       <FaQuestionCircle className="text-orange-400 text-xs" /> Ask & Learn
                     </Link>
@@ -499,19 +499,6 @@ export default function Navbar() {
                   <FaDonate className="text-gold-400 text-sm" />
                 </div>
                 <span className="text-gold-400 text-sm font-semibold">Donate</span>
-              </Link>
-
-              <Link
-                href="/news"
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-300 group ${
-                  isActive('/news') ? 'bg-gold-500/10' : 'hover:bg-white/10'
-                }`}
-                onClick={() => setIsOpen(false)}
-              >
-                <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                  <FaNewspaper className="text-blue-400 text-sm" />
-                </div>
-                <span className="text-white text-sm font-medium">News</span>
               </Link>
 
               <Link
