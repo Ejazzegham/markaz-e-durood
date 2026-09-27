@@ -52,14 +52,17 @@ body::-webkit-scrollbar {
   top: 80px;
   left: 0;
   width: 100%;
+  height: 46px;
   overflow: hidden;
   z-index: 40;
   background: transparent;
-  padding: 6px 0;
+  padding: 0;
 }
 
 .durood-scroll {
   display: flex;
+  align-items: center;
+  height: 100%;
   width: max-content;
   animation: marquee 60s linear infinite;
 }
@@ -160,12 +163,10 @@ body::-webkit-scrollbar {
 
 @media (max-width: 768px) {
   .durood-banner {
-    top: 84px;
-    padding: 8px 0;
+    height: 34px;
   }
   .durood-scroll {
     font-size: 18px;
-    animation-duration: 30s;
     padding: 0 15px;
   }
   .durood-item {
@@ -184,11 +185,10 @@ body::-webkit-scrollbar {
 
 @media (max-width: 480px) {
   .durood-banner {
-    padding: 8px 0;
+    height: 28px;
   }
   .durood-scroll {
     font-size: 14px;
-    animation-duration: 22s;
     padding: 0 10px;
     letter-spacing: 0.5px;
   }
