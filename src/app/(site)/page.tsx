@@ -343,7 +343,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: <FaQuran />, title: 'Authentic & Trusted', desc: 'Based on Quran & Sunnah' },
+              { icon: <FaQuran />, title: 'Authentic & Trusted', desc: 'Based on Quran Pak & Sunnah' },
               { icon: <MdMenuBook />, title: 'Learn & Understand', desc: 'Easy explanations & resources' },
               { icon: <FaHeadphones />, title: 'Listen & Recite', desc: 'Audio recitations & playlists' },
               { icon: <FaGlobe />, title: 'Share & Benefit', desc: 'Spread blessings worldwide' }

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 
 // Shared decorative background used across every /quran page — mirrors the
 // grid pattern, noise texture, gold glow orbs and corner brackets used on
-// the Resources pages, so the Qur'an section feels native to the rest of the
+// the Resources pages, so the Quran Pak section feels native to the rest of the
 // site rather than bolted on.
 export default function QuranBackground({ children }: { children: ReactNode }) {
   return (

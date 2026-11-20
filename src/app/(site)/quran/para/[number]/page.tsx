@@ -78,7 +78,7 @@ export default function ParaReadingPage() {
           <FaExclamationTriangle className="text-gold-500 text-3xl mx-auto mb-4" />
           <p className="text-white text-lg mb-2">Para not found</p>
           <Link href="/quran" className="text-gold-400 hover:underline text-sm">
-            Back to the Qur&apos;an index
+            Back to the Quran Pak index
           </Link>
         </div>
       </QuranBackground>
@@ -97,7 +97,7 @@ export default function ParaReadingPage() {
         icon={<FaQuran className="text-gold-500 text-xl" />}
         titleWhite={`Para ${meta.number}`}
         titleGold={meta.arabicStart}
-        subtitle="Section of the Holy Qur'an"
+        subtitle="Section of Quran Pak"
         actions={
           <>
             {reading && (

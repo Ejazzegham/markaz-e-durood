@@ -61,7 +61,7 @@ export default function QuranHubPage() {
       <div className="relative mb-8 h-[220px] sm:h-[300px] lg:h-[360px] rounded-3xl overflow-hidden border border-gold-500/20 shadow-2xl shadow-black/30">
         <Image
           src="/quran/quran-hero.jpg"
-          alt="The Holy Qur'an resting on a stand"
+          alt="Quran Pak resting on a stand"
           fill
           priority
           sizes="(max-width: 1024px) 100vw, 1600px"
@@ -77,7 +77,7 @@ export default function QuranHubPage() {
               Kalam-e-Ilahi
             </span>
             <h2 className="text-white text-2xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-3">
-              The Noble <span className="text-gold-500">Qur&apos;an</span>
+              The Noble <span className="text-gold-500">Quran Pak</span>
             </h2>
             <p className="text-gray-300 text-sm sm:text-base leading-relaxed hidden sm:block">
               Read and listen with Urdu &amp; English Tarjuma and Tafseer — a
@@ -109,8 +109,8 @@ export default function QuranHubPage() {
       <QuranTitleBar
         backHref="/"
         icon={<FaQuran className="text-gold-500 text-xl" />}
-        titleWhite="Al-Qur'an"
-        titleGold="Al-Kareem"
+        titleWhite="Quran"
+        titleGold="Pak"
         subtitle="Read & listen with Tarjuma and Tafseer"
         actions={
           <>

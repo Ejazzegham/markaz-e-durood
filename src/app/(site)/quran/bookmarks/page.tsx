@@ -32,7 +32,7 @@ export default function QuranBookmarksPage() {
             href="/quran"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gold-500 text-[#0b1d12] text-sm font-semibold hover:bg-gold-400 transition-colors"
           >
-            Browse the Qur&apos;an <FaArrowRight className="text-xs" />
+            Browse Quran Pak <FaArrowRight className="text-xs" />
           </Link>
         </div>
       ) : (

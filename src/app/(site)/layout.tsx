@@ -78,7 +78,7 @@ export default function RootLayout({
         <VisitorTracker />
         <SplashScreen>
           <Navbar />
-          <div className="pt-20 min-h-screen flex flex-col">
+          <div className="pt-16 min-h-screen flex flex-col">
             <main className="flex-grow">
               {children}
             </main>

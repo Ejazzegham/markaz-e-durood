@@ -73,7 +73,7 @@ export default function SurahReadingPage() {
           <FaExclamationTriangle className="text-gold-500 text-3xl mx-auto mb-4" />
           <p className="text-white text-lg mb-2">Surah not found</p>
           <Link href="/quran" className="text-gold-400 hover:underline text-sm">
-            Back to the Qur&apos;an index
+            Back to the Quran Pak index
           </Link>
         </div>
       </QuranBackground>

@@ -16,7 +16,7 @@ interface QuranTitleBarProps {
 
 // Shared premium header used across every /quran page — mirrors the title
 // bar used on the Resources pages (gold-accented glass panel, icon badge,
-// two-tone heading) so the Qur'an section matches the rest of the site.
+// two-tone heading) so the Quran Pak section matches the rest of the site.
 export default function QuranTitleBar({ backHref, icon, titleWhite, titleGold, subtitle, actions }: QuranTitleBarProps) {
   return (
     <div className="relative mb-8">

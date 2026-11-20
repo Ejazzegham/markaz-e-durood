@@ -46,7 +46,7 @@ const SECTIONS: {
     profileModel: 'qari',
     detailBase: '/markaz-e-naat/qari',
     icon: FaQuran,
-    tagline: 'Reciters of the Holy Quran',
+    tagline: 'Reciters of Quran Pak',
   },
   {
     key: 'naqabat',
@@ -169,7 +169,7 @@ export default function MarkazENaat() {
                       <span className="text-gold-500">Naat</span>
                     </h1>
                     <p className="text-gray-400 text-xs hidden sm:block">
-                      A home for the voices of Naat, Quran recitation, and Naqabat
+                      A home for the voices of Naat, Quran Pak recitation, and Naqabat
                     </p>
                   </div>
                 </div>

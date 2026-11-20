@@ -27,7 +27,7 @@ export default function DuroodResources() {
             <ul className="space-y-3">
               <li className="p-3 bg-gray-50 rounded-lg">
                 <span className="font-semibold">Durood Ibrahim</span>
-                <p className="text-gray-600 text-sm">The most comprehensive Durood from Quran</p>
+                <p className="text-gray-600 text-sm">The most comprehensive Durood from Quran Pak</p>
               </li>
               <li className="p-3 bg-gray-50 rounded-lg">
                 <span className="font-semibold">Durood Tunjina</span>

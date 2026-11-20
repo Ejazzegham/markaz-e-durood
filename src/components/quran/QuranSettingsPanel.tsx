@@ -177,7 +177,7 @@ export default function QuranSettingsPanel({ open, onClose }: QuranSettingsPanel
           </div>
 
           <p className="text-[11px] text-gray-500 leading-relaxed border-t border-white/5 pt-4">
-            Your reading preferences are saved on this device and applied automatically the next time you open the Qur&apos;an section.
+            Your reading preferences are saved on this device and applied automatically the next time you open the Quran Pak section.
           </p>
         </div>
       </div>
