@@ -178,8 +178,8 @@ export default function Contact() {
                     Tel: <a href="tel:+923008162244" className="text-gold-500 hover:underline">0300-8162244</a>
                   </p>
                   <p className="text-gray-300 text-sm">
-                    Web: <a href="https://www.markaz-e-durood.com" target="_blank" rel="noopener noreferrer" className="text-gold-500 hover:underline">
-                      www.markaz-e-durood.com
+                    Web: <a href="https://www.mkz-e-durood.com" target="_blank" rel="noopener noreferrer" className="text-gold-500 hover:underline">
+                      www.mkz-e-durood.com
                     </a>
                   </p>
                 </div>

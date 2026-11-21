@@ -18,7 +18,7 @@ const playfair = Playfair_Display({
   variable: '--font-playfair',
 })
 
-const siteUrl = 'https://www.markaz-e-durood.com'
+const siteUrl = 'https://www.mkz-e-durood.com'
 const siteName = 'Markaz-e-Durood'
 const description =
   'Markaz-e-Durood is a global platform dedicated to learning, reciting and spreading the blessings of Durood Shareef upon Prophet Muhammad ﷺ — featuring live durood counting, naat, books, audio, bayan and online classes.'
