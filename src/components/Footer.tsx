@@ -200,8 +200,8 @@ export default function Footer() {
                 <div className="w-9 h-9 rounded-lg bg-gold-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-gold-500/20 transition-colors">
                   <FaGlobe className="text-gold-400 text-sm" />
                 </div>
-                <a href="https://www.mkz-e-durood.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-gold-400 transition-colors text-sm">
-                  www.mkz-e-durood.com
+                <a href="https://markaz-e-durood.vercel.app" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-gold-400 transition-colors text-sm">
+                  markaz-e-durood.vercel.app
                 </a>
               </li>
             </ul>
