@@ -148,7 +148,7 @@ const FEATURES = [
 // Live Facebook widget inside a premium frame
 // ------------------------------------------------------------
 
-function LiveWidgetFrame() {
+function LiveWidgetFrame({ onRetry }: { onRetry: () => void }) {
   const frameRef = useRef<HTMLDivElement>(null)
   const pageRef = useRef<HTMLDivElement>(null)
   const [status, setStatus] = useState<'loading' | 'ready' | 'failed'>('loading')
@@ -265,7 +265,16 @@ function LiveWidgetFrame() {
                     The live feed couldn&apos;t load here. This can happen with ad blockers or
                     in-app browsers. You can view everything directly on Facebook.
                   </p>
-                  <FollowButton />
+                  <div className="flex flex-col sm:flex-row items-center gap-3">
+                    <FollowButton />
+                    <button
+                      type="button"
+                      onClick={onRetry}
+                      className="inline-flex items-center justify-center rounded-xl border border-white/15 hover:border-gold-500/40 bg-white/[0.03] text-gray-200 text-sm font-medium px-5 py-3.5 transition-all"
+                    >
+                      Try again
+                    </button>
+                  </div>
                 </>
               )}
             </div>
@@ -307,6 +316,7 @@ function LiveWidgetFrame() {
 }
 
 function FallbackLayout() {
+  const [attempt, setAttempt] = useState(0)
   return (
     <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center">
       {/* ---------------- Branded panel ---------------- */}
@@ -360,7 +370,7 @@ function FallbackLayout() {
 
       {/* ---------------- Framed live widget ---------------- */}
       <div className="w-full max-w-[560px] mx-auto lg:max-w-none">
-        <LiveWidgetFrame />
+        <LiveWidgetFrame key={attempt} onRetry={() => setAttempt((n) => n + 1)} />
       </div>
     </div>
   )
@@ -447,7 +457,11 @@ export default function FacebookSection() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/facebook/posts')
+    // Never leave the section stuck on its loading skeleton: give up on the
+    // Graph API request after 6 seconds and show the widget layout instead.
+    const controller = new AbortController()
+    const timer = window.setTimeout(() => controller.abort(), 6000)
+    fetch('/api/facebook/posts', { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         if (data.error || !data.posts?.length) {
@@ -457,7 +471,14 @@ export default function FacebookSection() {
         }
       })
       .catch(() => setPosts(null))
-      .finally(() => setLoading(false))
+      .finally(() => {
+        window.clearTimeout(timer)
+        setLoading(false)
+      })
+    return () => {
+      window.clearTimeout(timer)
+      controller.abort()
+    }
   }, [])
 
   return (
