@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getDb } from '@/lib/db/firestore'
+import { cached, cacheHeaders, envSeconds } from '@/lib/cache/ttlCache'
 
 // Without this, Next.js treats a GET route with no dynamic APIs as static
 // and caches the response at build time — so the counter would freeze at
@@ -38,8 +39,8 @@ interface SubmissionRow {
 // plenty fast at this site's scale; if submission volume grows very large,
 // swap this for running totals maintained by a Cloud Function trigger
 // instead of reading every row on each request.
-export async function GET() {
-  try {
+async function computeStats() {
+  {
     const now = new Date()
     const todayStart = startOfDay(now)
     const weekStart = startOfWeek(now)
@@ -118,7 +119,7 @@ export async function GET() {
         .slice(0, 10)
     }
 
-    return NextResponse.json({
+    return {
       total,
       today,
       week,
@@ -133,7 +134,17 @@ export async function GET() {
         monthly: buildLeaderboard(monthStart),
         allTime: buildLeaderboard(null),
       },
-    })
+    }
+  }
+}
+
+// Cached for a few minutes (override with STATS_CACHE_SECONDS in Vercel).
+const STATS_TTL_SECONDS = envSeconds('STATS_CACHE_SECONDS', 300)
+
+export async function GET() {
+  try {
+    const { value } = await cached('durood:stats', STATS_TTL_SECONDS * 1000, computeStats)
+    return NextResponse.json(value, { headers: cacheHeaders(STATS_TTL_SECONDS) })
   } catch (error) {
     console.error('Durood stats error:', error)
     return NextResponse.json({ error: 'Something went wrong loading stats.' }, { status: 500 })

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getDb } from '@/lib/db/firestore'
+import { cached, cacheHeaders, envSeconds } from '@/lib/cache/ttlCache'
 
 // Without this, Next.js would cache the response at build time and the
 // map/stats would freeze at whatever they were on the last deploy.
@@ -22,8 +23,8 @@ function startOfDay(d: Date) {
   return x
 }
 
-export async function GET() {
-  try {
+async function computeVisitorStats() {
+  {
     const db = getDb()
     const snap = await db
       .collection('siteVisitors')
@@ -108,7 +109,7 @@ export async function GET() {
         lastSeenAt: r.lastSeenAt,
       }))
 
-    return NextResponse.json({
+    return {
       totalVisitors,
       totalVisits,
       totalCountries,
@@ -116,7 +117,17 @@ export async function GET() {
       topCountries,
       markers,
       recentVisitors,
-    })
+    }
+  }
+}
+
+// Visitor numbers change slowly, so cache longer (VISITORS_CACHE_SECONDS).
+const VISITORS_TTL_SECONDS = envSeconds('VISITORS_CACHE_SECONDS', 900)
+
+export async function GET() {
+  try {
+    const { value } = await cached('visitors:stats', VISITORS_TTL_SECONDS * 1000, computeVisitorStats)
+    return NextResponse.json(value, { headers: cacheHeaders(VISITORS_TTL_SECONDS) })
   } catch (error) {
     console.error('Visitor stats error:', error)
     return NextResponse.json({ error: 'Something went wrong loading visitor stats.' }, { status: 500 })

@@ -7,7 +7,7 @@ import { FaGlobeAmericas, FaUsers, FaFlag, FaBolt, FaSpinner, FaCircle } from 'r
 import { countryCodeToFlag } from '@/lib/geo/countryFlag'
 
 const GEO_URL = '/data/world-110m.json'
-const POLL_MS = 45000
+const POLL_MS = 180000
 const GLOBE_SIZE = 440
 const GLOBE_SCALE = 190
 // Degrees of longitude the globe spins per animation tick — a full
@@ -111,7 +111,7 @@ export default function VisitorsWorldMap() {
     }
 
     load()
-    const interval = setInterval(load, POLL_MS)
+    const interval = setInterval(() => { if (!document.hidden) load() }, POLL_MS)
     return () => {
       cancelled = true
       clearInterval(interval)

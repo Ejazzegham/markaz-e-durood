@@ -111,14 +111,26 @@ export default function DuroodCount() {
 
   const loadStats = () => {
     fetch('/api/durood/stats')
-      .then((res) => res.json())
-      .then((data) => setStats(data))
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('stats unavailable'))))
+      .then((data) => {
+        if (data && typeof data.total === 'number') {
+          setStats(data)
+          try { localStorage.setItem('markaz-durood-stats', JSON.stringify(data)) } catch {}
+        }
+      })
+      .catch(() => {
+        // Server busy or over quota — keep showing the last numbers we had.
+        try {
+          const raw = localStorage.getItem('markaz-durood-stats')
+          if (raw) setStats((cur) => cur ?? JSON.parse(raw))
+        } catch {}
+      })
       .finally(() => setLoading(false))
   }
 
   useEffect(() => {
     loadStats()
-    const interval = setInterval(loadStats, 20000)
+    const interval = setInterval(() => { if (!document.hidden) loadStats() }, 120000)
     return () => clearInterval(interval)
   }, [])
 

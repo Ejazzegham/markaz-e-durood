@@ -101,8 +101,9 @@ export default function Home() {
       fetch('/api/durood/stats')
         .then((res) => res.json())
         .then((data) => {
+          try { if (typeof data?.total === 'number') localStorage.setItem('markaz-durood-total', String(data.total)) } catch {}
           setLiveDuroodCount((prev) => {
-            const next = data.total || 0
+            const next = typeof data?.total === 'number' ? data.total : prev
             if (prev && next > prev) {
               setJustAdded(next - prev)
               setTickKey((k) => k + 1)
@@ -113,8 +114,14 @@ export default function Home() {
         .catch(() => {})
     }
 
+    // Show the last known total instantly, so a slow or failing server never shows 0
+    try {
+      const saved = Number(localStorage.getItem('markaz-durood-total'))
+      if (saved > 0) setLiveDuroodCount((prev) => prev || saved)
+    } catch {}
     fetchTotal()
-    const interval = setInterval(fetchTotal, 20000) // refresh every 20s
+    // refresh every 2 minutes, and only while the tab is visible (protects the database quota)
+    const interval = setInterval(() => { if (!document.hidden) fetchTotal() }, 120000)
     return () => clearInterval(interval)
   }, [])
 

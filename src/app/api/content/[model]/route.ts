@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { adminModels, isValidModelKey } from '@/lib/admin/models'
+import { cached, cacheHeaders, envSeconds } from '@/lib/cache/ttlCache'
 
 export const dynamic = 'force-dynamic'
+
+const CONTENT_TTL_SECONDS = envSeconds('CONTENT_CACHE_SECONDS', 180)
 
 function normalizeName(value: unknown): string {
   if (typeof value !== 'string') return ''
@@ -28,10 +31,20 @@ export async function GET(
       ? { isActive: true }
       : {}
 
-  const items = await config.delegate.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-  })
+  // Cached so the same list isn't re-read from Firestore for every visitor.
+  let items: any[]
+  try {
+    const result = await cached(`content:${params.model}`, CONTENT_TTL_SECONDS * 1000, () =>
+      config.delegate.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+      })
+    )
+    items = result.value as any[]
+  } catch (error) {
+    console.error(`Content load error (${params.model}):`, error)
+    return NextResponse.json({ error: 'Content is temporarily unavailable.' }, { status: 503 })
+  }
 
   // Lets a performer's page (Naat Khawan / Qari-e-Quran / Naqabat) pull just
   // that person's items, e.g. /api/content/naat?person=Some+Name
@@ -51,7 +64,7 @@ export async function GET(
         )
       : items
 
-  return NextResponse.json({ items: filtered })
+  return NextResponse.json({ items: filtered }, { headers: cacheHeaders(CONTENT_TTL_SECONDS) })
 }
 
 const publicFaqSubmissionSchema = z.object({

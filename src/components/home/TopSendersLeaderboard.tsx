@@ -91,7 +91,7 @@ export default function TopSendersLeaderboard() {
         .catch(() => {})
     }
     load()
-    const interval = setInterval(load, 45000)
+    const interval = setInterval(() => { if (!document.hidden) load() }, 180000)
     return () => clearInterval(interval)
   }, [])
 
