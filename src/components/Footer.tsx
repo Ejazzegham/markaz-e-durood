@@ -184,8 +184,8 @@ export default function Footer() {
                 <div className="w-9 h-9 rounded-lg bg-gold-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-gold-500/20 transition-colors">
                   <FaEnvelope className="text-gold-400 text-sm" />
                 </div>
-                <a href="mailto:markaz.e.durood@gmail.com" className="text-gray-300 hover:text-gold-400 transition-colors text-sm">
-                  markaz.e.durood@gmail.com
+                <a href="mailto:mkzedurood@gmail.com" className="text-gray-300 hover:text-gold-400 transition-colors text-sm">
+                  mkzedurood@gmail.com
                 </a>
               </li>
               <li className="flex items-center gap-3 group">
